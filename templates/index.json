@@ -19,7 +19,7 @@
             "image_overlay_opacity": 0,
             "heading": "<strong>More than just shoes — it’s a part of your story.</strong>",
             "heading_size": "h1",
-            "subheading": "<strong>Original sneakers from Nike and other top brands that make every step feel special.</strong>",
+            "subheading": "Original sneakers from Nike and other top brands that make every step feel special.",
             "button_label": "Shop the Collection",
             "link": "https://stellar-soft-academy.myshopify.com/?preview_theme_id=153479119065",
             "button_style_secondary": false,
@@ -37,7 +37,7 @@
             "image_overlay_opacity": 0,
             "heading": "<strong>More than just shoes — it’s a part of your story.</strong>",
             "heading_size": "h1",
-            "subheading": "<strong>Original sneakers from Nike and other top brands that make every step feel special.</strong>",
+            "subheading": "Original sneakers from Nike and other top brands that make every step feel special.",
             "button_label": "Shop the Collection",
             "link": "https://stellar-soft-academy.myshopify.com/?preview_theme_id=153479119065",
             "button_style_secondary": false,
@@ -55,7 +55,7 @@
             "image_overlay_opacity": 0,
             "heading": "<strong>More than just shoes — it’s a part of your story.</strong>",
             "heading_size": "h1",
-            "subheading": "<strong>Original sneakers from Nike and other top brands that make every step feel special.</strong>",
+            "subheading": "Original sneakers from Nike and other top brands that make every step feel special.",
             "button_label": "Shop the Collection",
             "link": "https://stellar-soft-academy.myshopify.com/?preview_theme_id=153479119065",
             "button_style_secondary": false,
@@ -79,7 +79,7 @@
         ".slider-button,.slideshow__autoplay {display: none;}",
         ".slider-mobile-gutter {position: relative;}",
         ".slideshow__controls {position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); border: none;}",
-        ".dot {width: 20px; height: 6px; border-radius: 3px;}"
+        ".dot {width: 20px; height: 6px; border-radius: 3px; background: #fff;}"
       ],
       "name": "t:sections.slideshow.presets.name",
       "settings": {
