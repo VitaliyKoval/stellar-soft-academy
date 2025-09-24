@@ -116,7 +116,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Browse our latest products",
+            "heading": "<strong>NEW BANNER</strong>",
             "heading_size": "h0"
           }
         },
@@ -137,6 +137,7 @@
         "button"
       ],
       "settings": {
+        "image": "shopify://shop_images/Slide-2.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
         "image_behavior": "none",
