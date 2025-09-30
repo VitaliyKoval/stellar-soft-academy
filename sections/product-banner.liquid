@@ -1,13 +1,12 @@
 <section class="product">
   <div class="wrapper">
     {% assign product = all_products[section.settings.product] %}
-    <pre id="product-json">
-      {{ product | json }}
-    </pre>
-    {% comment %}
+    {% if product != blank %}
       <div class="product__gallery">
         <div class="swiper product__gallery-swiper">
           <div class="swiper-wrapper product__galelly-items">
+            {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
+            {{ variant_gallery }}
             <div class="swiper-slide">
               <img
                 class="product__gallery-item"
@@ -89,11 +88,11 @@
 
         <button class="product__options-add">Add To Bag</button>
         <p class="product__options-note">
-          Let your attitude have the edge in your Nike Air Max Plus, a Tuned Air experience that offers premium stability
-          and unbelievable cushioning.
+          Let your attitude have the edge in your Nike Air Max Plus, a Tuned Air experience that offers premium
+          stability and unbelievable cushioning.
         </p>
       </div>
-    {% endcomment %}
+    {% endif %}
   </div>
 </section>
 
