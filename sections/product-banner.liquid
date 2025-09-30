@@ -6,7 +6,11 @@
         <div class="swiper product__gallery-swiper">
           <div class="swiper-wrapper product__galelly-items">
             {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
-            {{ variant_gallery }}
+            {% if variant_gallery %}
+              {% for image in variant_gallery %}
+                <img src="{{ image | image_url: '800x' }}" alt="Variant image">
+              {% endfor %}
+            {% endif %}
             <div class="swiper-slide">
               <img
                 class="product__gallery-item"
