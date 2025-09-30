@@ -1,0 +1,117 @@
+<section class="product">
+  <div class="wrapper">
+    {% assign product = all_products[section.settings.product] %}
+    <pre id="product-json">
+      {{ product | json }}
+    </pre>
+    {% comment %}
+      <div class="product__gallery">
+        <div class="swiper product__gallery-swiper">
+          <div class="swiper-wrapper product__galelly-items">
+            <div class="swiper-slide">
+              <img
+                class="product__gallery-item"
+                src="./images/image1.jpg"
+                alt="Sneakers"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="product__gallery-main">
+          <img
+            class="product__gallery-img"
+            src="./images/image1.jpg"
+            alt="Selected image of sneakers"
+          >
+          <span class="product__gallery-badge">Highly Rated</span>
+        </div>
+      </div>
+
+      <div class="product__options">
+        <div class="product__options-container">
+          <h3 class="product__options-header">Nike Air Max Plus</h3>
+          <span class="product__options-price">$280.00</span>
+          <div class="product__options-items">
+            <img
+              src="./images/image1.jpg"
+              alt="sneakers"
+              aria-label="Select white sneakers"
+              class="product__options-item active"
+              data-set-item="0"
+            >
+          </div>
+          <p class="product__options-title">Select Size:</p>
+          <div class="product__options-sizes">
+            <div
+              class="product__options-size active"
+              role="button"
+              aria-pressed="true"
+            >
+              UK 5.5
+            </div>
+            <div
+              class="product__options-size"
+              role="button"
+              aria-pressed="false"
+            >
+              UK 6 (EU 39)
+            </div>
+            <div
+              class="product__options-size"
+              role="button"
+              aria-pressed="false"
+            >
+              UK 6 (EU 40)
+            </div>
+            <div
+              class="product__options-size"
+              role="button"
+              aria-pressed="false"
+            >
+              UK 6.5
+            </div>
+            <div
+              class="product__options-size"
+              role="button"
+              aria-pressed="false"
+            >
+              UK 7
+            </div>
+            <div
+              class="product__options-size"
+              role="button"
+              aria-pressed="false"
+            >
+              UK 7.5
+            </div>
+          </div>
+        </div>
+
+        <button class="product__options-add">Add To Bag</button>
+        <p class="product__options-note">
+          Let your attitude have the edge in your Nike Air Max Plus, a Tuned Air experience that offers premium stability
+          and unbelievable cushioning.
+        </p>
+      </div>
+    {% endcomment %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Banner",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Select Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Banner",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
