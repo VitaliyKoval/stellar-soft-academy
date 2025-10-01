@@ -9,6 +9,13 @@
  */
 {
   "sections": {
+    "product_banner_iGWKNw": {
+      "type": "product-banner",
+      "name": "Product Banner",
+      "settings": {
+        "product": "nike-air-max-plus"
+      }
+    },
     "slideshow_MYmQJq": {
       "type": "slideshow",
       "blocks": {
@@ -180,6 +187,7 @@
     }
   },
   "order": [
+    "product_banner_iGWKNw",
     "slideshow_MYmQJq",
     "video_DQrxnw",
     "image_banner",
