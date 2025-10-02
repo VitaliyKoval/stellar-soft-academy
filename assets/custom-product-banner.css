@@ -202,10 +202,21 @@ html {
   }
 }
 
-@media (max-width: 1172px) {
+@media (max-width: 1196px) {
   .product__gallery {
     flex-direction: column-reverse;
     justify-content: flex-end;
+  }
+
+  .product__galelly-items {
+    flex-direction: row;
+    width: 536px;
+    height: 88px;
+  }
+
+  .product__gallery-swiper {
+    width: 536px;
+    height: 88px;
   }
 }
 
@@ -226,7 +237,7 @@ html {
   }
 }
 
-@media (max-width: 656px) {
+@media (max-width: 680px) {
   .product .wrapper {
     padding: 60px 16px;
     gap: 24px;
