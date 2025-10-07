@@ -105,6 +105,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const price = document.querySelector('.product__options-price');
     const productGallery = document.querySelector('.product__galelly-items');
     const mainImage = document.querySelector('.product__gallery-img');
     const groups = document.querySelector('.product__options-items');
@@ -114,10 +115,23 @@
     const groupThumbs = [];
 
     const gallerySwiper = new Swiper('.product__gallery-swiper', {
-      direction: 'vertical',
-      slidesPerView: 'auto',
+      direction: "vertical",
+      slidesPerView: "auto",
       freeMode: true,
-      spaceBetween: 24,
+      breakpoints: {
+        1196: {
+          direction: "vertical",
+          spaceBetween: 24,
+        },
+        680: {
+          direction: "horizontal",
+          spaceBetween: 24,
+        },
+        0: {
+          direction: "horizontal",
+          spaceBetween: 16,
+        },
+      },
     });
 
     const productData = {
@@ -125,6 +139,8 @@
       {% for variant in product.variants %}
         {
           id: {{ variant.id }},
+          title: "{{ variant.title }}",
+          price: "{{ variant.price | money_without_currency | prepend: '$' }}",
           color: "{{ variant.option1 | strip | downcase }}",
           size: "{{ variant.option2 }}",
           available: {{ variant.available }},
@@ -188,6 +204,7 @@
         sizesElement.innerHTML = "";
         const color = colors[groupNumber];
         const variants = productData.variants.filter(variant => variant.color === color && variant.available);
+        price.textContent = variants[0].price;
         
         for (let i = 0; i < variants.length; i++) {
           const variant = variants[i];
@@ -238,6 +255,7 @@
       });
     });
   });
+  console.log({{product | json}});
 </script>
 
 {% schema %}
