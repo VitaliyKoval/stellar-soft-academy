@@ -95,7 +95,7 @@
 
         {% if product.description %}
           <p class="product__options-note">
-            {{ product.description }}
+            {{ product.description | strip_html }}
           </p>
         {% endif %}
       </div>
@@ -227,6 +227,10 @@
         activeSizeElement?.classList.remove('active');
         sizeElement.classList.add('active');
       }
+
+      const variantId = sizeElement.dataset.variantId;
+      const inputId = document.querySelector('form input[name="id"]');
+      if (inputId) inputId.value = variantId;
     });
 
     addButton.addEventListener('click', () => {
