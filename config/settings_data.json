@@ -138,20 +138,6 @@
         "settings": {
           "color_scheme": "scheme-1"
         }
-      },
-      "custom-header": {
-        "type": "custom-header",
-        "settings": {}
-      },
-      "product-banner": {
-        "type": "product-banner",
-        "settings": {
-          "product": "nike-air-max-plus"
-        }
-      },
-      "custom-footer": {
-        "type": "custom-footer",
-        "settings": {}
       }
     },
     "content_for_index": [],
