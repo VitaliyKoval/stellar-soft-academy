@@ -1,0 +1,15 @@
+{%- assign section_links = links | t | split: ', ' -%}
+
+<details class="footer__section" open>
+  <summary class="footer__title">
+    {{ title_key | t }}
+    <i class="footer-icon"></i>
+  </summary>
+  <ul class="footer__list">
+    {%- for value in section_links -%}
+      <li class="footer__item">
+        <a href="#">{{ value }}</a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</details>

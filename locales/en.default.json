@@ -8,6 +8,32 @@
  * ------------------------------------------------------------
  */
 {
+  "a11y": {
+    "open_menu": "Open menu",
+    "open_cart": "Open cart",
+    "main_nav": "Main navigation"
+  },
+  "nav": {
+    "new_featured": "New & Featured",
+    "men": "Men",
+    "women": "Women",
+    "kids": "Kids"
+  },
+  "footer": {
+    "resources": "Resources",
+    "help": "Help",
+    "company": "Company",
+    "menu": "Menu",
+    "rights": "All rights reserved.",
+    "terms": "Terms of Use",
+    "privacy": "Privacy & Cookie Policy",
+    "cookie": "Privacy & Cookie Settings",
+    "resources_links": "Find a Store, Nike Journal, Become a Member, Feedback, Promo Codes",
+    "help_links": "Get Help, Order Status, Shipping and Delivery, Returns, Payment Options",
+    "company_links": "About Nike, News, Careers, Investors, Sustainability",
+    "menu_links": "New & Featured, Men, Women, Kids"
+  },
+
   "general": {
     "password_page": {
       "login_form_heading": "Enter store using password:",

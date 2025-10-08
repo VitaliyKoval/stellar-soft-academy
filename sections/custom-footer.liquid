@@ -1,0 +1,80 @@
+{{ 'custom-footer.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .footer-icon {
+    background-image: url({{ 'up-small.svg' | asset_url }});
+  }
+
+  .footer-icon.close {
+    background-image: url({{ 'down-small.svg' | asset_url }});
+  }
+</style>
+
+<footer class="footer" role="contentinfo">
+  <div class="wrapper">
+    <div class="footer__container">
+      {%- render 'footer-section', title_key: 'footer.resources', links: 'footer.resources_links' -%}
+
+      {%- render 'footer-section', title_key: 'footer.help', links: 'footer.help_links' -%}
+
+      {%- render 'footer-section', title_key: 'footer.company', links: 'footer.company_links' -%}
+
+      {%- render 'footer-section', title_key: 'footer.menu', links: 'footer.menu_links' -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p>© 2025 {{ shop.name | escape }}. {{ 'footer.rights' | t }}</p>
+      <ul class="footer__bottom-links">
+        <li>
+          <a href="#">{{ 'footer.terms' | t }}</a>
+        </li>
+        <li>
+          <a href="#">{{ 'footer.privacy' | t }}</a>
+        </li>
+        <li>
+          <a href="#">{{ 'footer.cookie' | t }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('.footer__section');
+
+  if (window.innerWidth < 768) {
+    sections.forEach((section, index) => {
+      if (index === 0) {
+        section.setAttribute('open', '');
+      } else {
+        section.removeAttribute('open');
+        section.querySelector('.footer-icon').classList.add('close');
+      }
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth < 768) {
+      sections.forEach((section, index) => {
+        if (index === 0) {
+          section.setAttribute('open', '');
+        } else {
+          section.removeAttribute('open');
+          section.querySelector('.footer-icon').classList.add('close');
+        }
+      });
+    } else {
+      sections.forEach((section) => {
+        section.setAttribute('open', 'open');
+        section.querySelector('.footer-icon').classList.remove('close');
+      });
+    }
+  });
+
+  const footerConainer = document.querySelector('.footer__container');
+  footerConainer.addEventListener('click', (e) => {
+    const summary = e.target.closest('.footer__title');
+    if (!summary) return;
+    summary.querySelector('.footer-icon').classList.toggle('close');
+  });
+</script>
