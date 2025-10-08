@@ -215,6 +215,9 @@
           div.textContent = `UK ${variant.size}`;
           sizesElement.appendChild(div);
         }
+
+        const inputId = document.querySelector('form input[name="id"]');
+        if (inputId) inputId.value = variants[0].id;
       }
     });
 
