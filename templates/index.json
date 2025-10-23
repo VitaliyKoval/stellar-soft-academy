@@ -26,16 +26,26 @@
           "type": "banner",
           "settings": {
             "image": "shopify://shop_images/Slide-2.jpg",
+            "title": "some",
+            "button_text": "Button",
+            "button_link": "",
+            "aspect_ratio": "1-1"
+          }
+        },
+        "banner_9VfdAQ": {
+          "type": "banner",
+          "settings": {
             "title": "",
             "button_text": "",
             "button_link": "",
-            "aspect_ratio": "1-1"
+            "aspect_ratio": "16-9"
           }
         }
       },
       "block_order": [
         "banner_BLCNiq",
-        "banner_3t97Tg"
+        "banner_3t97Tg",
+        "banner_9VfdAQ"
       ],
       "name": "Promo Banners",
       "settings": {
