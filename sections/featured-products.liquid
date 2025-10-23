@@ -49,23 +49,25 @@
 }
 {% endschema %}
 
-{% assign collection_handle = section.settings.collection %}
-{% assign sort_option = request.query.sort_by | default: 'best-selling' %}
-{% assign products = collections[collection_handle].products %}
+{% assign collection_obj = collections | where: 'id', section.settings.collection | first %}
 
-{% if sort_option == 'best-selling' %}
-  {% assign products = products | sort_by: 'best-selling' %}
-{% elsif sort_option == 'price-ascending' %}
-  {% assign products = products | sort_by: 'price' %}
-{% elsif sort_option == 'price-descending' %}
-  {% assign products = products | sort_by: 'price' | reverse %}
-{% elsif sort_option == 'title-ascending' %}
-  {% assign products = products | sort_by: 'title' %}
-{% elsif sort_option == 'title-descending' %}
-  {% assign products = products | sort_by: 'title' | reverse %}
+{% if collection_obj %}
+  {% assign products = collection_obj.products %}
+
+  {% if sort_option == 'best-selling' %}
+    {% assign products = products | sort_by: 'best-selling' %}
+  {% elsif sort_option == 'price-ascending' %}
+    {% assign products = products | sort_by: 'price' %}
+  {% elsif sort_option == 'price-descending' %}
+    {% assign products = products | sort_by: 'price' | reverse %}
+  {% elsif sort_option == 'title-ascending' %}
+    {% assign products = products | sort_by: 'title' %}
+  {% elsif sort_option == 'title-descending' %}
+    {% assign products = products | sort_by: 'title' | reverse %}
+  {% endif %}
+
+  {% assign products = products | slice: 0, section.settings.products_limit %}
 {% endif %}
-
-{% assign products = products | slice: 0, section.settings.products_limit %}
 
 <div class="featured-products-section" data-section-id="{{ section.id }}">
   <h2>{{ section.settings.heading }}</h2>
