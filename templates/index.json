@@ -9,6 +9,17 @@
  */
 {
   "sections": {
+    "promo_banners_enRyde": {
+      "type": "promo-banners",
+      "name": "Promo Banners",
+      "settings": {
+        "heading": "More than just shoes — it’s a part of your story.",
+        "subheading": "<p>Original sneakers from Nike and other top brands that make every step feel special.</p>",
+        "text_alignment": "center",
+        "padding": 40,
+        "color_scheme": "dark"
+      }
+    },
     "product_banner_iGWKNw": {
       "type": "product-banner",
       "name": "Product Banner",
@@ -187,6 +198,7 @@
     }
   },
   "order": [
+    "promo_banners_enRyde",
     "product_banner_iGWKNw",
     "slideshow_MYmQJq",
     "video_DQrxnw",
