@@ -107,10 +107,10 @@
       <div class="product-item" data-product-id="{{ product.id }}">
         <a href="{{ product.url }}">
           <img
-            src="{{ product.featured_image | img_url: 'small' }}"
+            src="{{ product.featured_image | img_url: 'medium' }}"
             alt="{{ product.title }}"
-            width="300"
-            height="300"
+            width="240"
+            height="240"
           >
           <h3>{{ product.title }}</h3>
         </a>
@@ -178,5 +178,6 @@
   .featured-products-list {
     display: flex;
     flex-wrap: wrap;
+    gap: 20px;
   }
 </style>
