@@ -144,6 +144,8 @@
     overflow: hidden;
     border-radius: 12px;
     background: #eee;
+    max-width: 500px;
+    width: 100%;
   }
 
   .promo-banners__item--16-9 { aspect-ratio: 16 / 9; }
@@ -162,7 +164,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 12px;
+    padding: {{ section.settings.padding }};
     text-align: center;
   }
 
