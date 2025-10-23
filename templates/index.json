@@ -13,9 +13,9 @@
       "type": "featured-products",
       "name": "Featured Products",
       "settings": {
-        "heading": "",
-        "collection": "",
-        "products_limit": 4,
+        "heading": "All Sneakers",
+        "collection": "all-sneakers",
+        "products_limit": 12,
         "show_price": true,
         "show_rating": true,
         "show_add_to_cart": true
