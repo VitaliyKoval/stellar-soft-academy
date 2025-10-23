@@ -14,7 +14,7 @@
       "name": "Featured Products",
       "settings": {
         "heading": "All Sneakers",
-        "collection": "",
+        "collection": "all-sneakers",
         "products_limit": 12,
         "show_price": true,
         "show_rating": true,
