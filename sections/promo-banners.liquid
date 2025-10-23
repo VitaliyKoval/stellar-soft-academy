@@ -97,8 +97,7 @@
   .promo-banners {
     width: 100%;
     box-sizing: border-box;
-    padding-top: {{ section.settings.padding }}px;
-    padding-bottom: {{ section.settings.padding }}px;
+    padding: {{ section.settings.padding }}px;
   }
 
   .promo-banners.color-scheme-light {
@@ -129,8 +128,6 @@
     display: grid;
     gap: 20px;
     grid-template-columns: 1fr;
-    justify-content: center;
-    justify-items: center;
   }
 
   @media (min-width: 768px) {
@@ -146,8 +143,6 @@
     overflow: hidden;
     border-radius: 12px;
     background: #eee;
-    max-width: 500px;
-    width: 100%;
   }
 
   .promo-banners__item--16-9 { aspect-ratio: 16 / 9; }
