@@ -27,8 +27,8 @@
           "settings": {
             "image": "shopify://shop_images/Slide-2.jpg",
             "title": "",
-            "button_text": "",
-            "button_link": "",
+            "button_text": "Shop the Collection",
+            "button_link": "shopify://collections/frontpage",
             "aspect_ratio": "1-1"
           }
         },
