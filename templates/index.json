@@ -11,6 +11,41 @@
   "sections": {
     "promo_banners_enRyde": {
       "type": "promo-banners",
+      "blocks": {
+        "banner_BLCNiq": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Slide-3.jpg",
+            "title": "",
+            "button_text": "Shop the Collection",
+            "button_link": "",
+            "aspect_ratio": "1-1"
+          }
+        },
+        "banner_3t97Tg": {
+          "type": "banner",
+          "settings": {
+            "title": "",
+            "button_text": "",
+            "button_link": "",
+            "aspect_ratio": "16-9"
+          }
+        },
+        "banner_wJXUDa": {
+          "type": "banner",
+          "settings": {
+            "title": "",
+            "button_text": "",
+            "button_link": "",
+            "aspect_ratio": "16-9"
+          }
+        }
+      },
+      "block_order": [
+        "banner_BLCNiq",
+        "banner_3t97Tg",
+        "banner_wJXUDa"
+      ],
       "name": "Promo Banners",
       "settings": {
         "heading": "More than just shoes — it’s a part of your story.",
