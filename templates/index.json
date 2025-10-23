@@ -31,22 +31,11 @@
             "button_link": "",
             "aspect_ratio": "1-1"
           }
-        },
-        "banner_wJXUDa": {
-          "type": "banner",
-          "settings": {
-            "image": "shopify://shop_images/Slide-1.jpg",
-            "title": "",
-            "button_text": "",
-            "button_link": "",
-            "aspect_ratio": "1-1"
-          }
         }
       },
       "block_order": [
         "banner_BLCNiq",
-        "banner_3t97Tg",
-        "banner_wJXUDa"
+        "banner_3t97Tg"
       ],
       "name": "Promo Banners",
       "settings": {
