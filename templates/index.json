@@ -25,10 +25,11 @@
         "banner_3t97Tg": {
           "type": "banner",
           "settings": {
+            "image": "shopify://shop_images/Slide-2.jpg",
             "title": "",
             "button_text": "",
             "button_link": "",
-            "aspect_ratio": "16-9"
+            "aspect_ratio": "1-1"
           }
         },
         "banner_wJXUDa": {
