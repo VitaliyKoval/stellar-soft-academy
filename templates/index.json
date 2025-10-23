@@ -16,9 +16,9 @@
           "type": "banner",
           "settings": {
             "image": "shopify://shop_images/Slide-3.jpg",
-            "title": "",
+            "title": "Original sneakers from Nike and other top brands that make every step feel special.",
             "button_text": "Shop the Collection",
-            "button_link": "",
+            "button_link": "shopify://collections/frontpage",
             "aspect_ratio": "1-1"
           }
         },
@@ -31,11 +31,22 @@
             "button_link": "",
             "aspect_ratio": "1-1"
           }
+        },
+        "banner_gwf3wz": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Slide-1.jpg",
+            "title": "",
+            "button_text": "",
+            "button_link": "",
+            "aspect_ratio": "1-1"
+          }
         }
       },
       "block_order": [
         "banner_BLCNiq",
-        "banner_3t97Tg"
+        "banner_3t97Tg",
+        "banner_gwf3wz"
       ],
       "name": "Promo Banners",
       "settings": {
