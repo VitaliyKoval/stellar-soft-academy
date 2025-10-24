@@ -1,4 +1,4 @@
-{% assign designers = collection.metafields.custom.designers %}
+{% assign designers = shop.metaobjects.designer.values %}
 
 {% if designers != blank %}
   <div class="designers-grid">
@@ -31,7 +31,7 @@
           <div class="designer-tags">
             <strong>Tags</strong>
             <div class="tags-list">
-              {% for tag in designer.tags %}
+              {% for tag in designer.tags.value %}
                 <span class="tag">{{ tag }}</span>
               {% endfor %}
             </div>
@@ -41,7 +41,7 @@
         {% if designer.links %}
           <div class="designer-links">
             <strong>Portfolio links</strong>
-            {% for link in designer.links %}
+            {% for link in designer.links.value %}
               <a href="{{ link }}" target="_blank">{{ link }}</a>
             {% endfor %}
           </div>
@@ -70,7 +70,7 @@
   .designers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    gap: 40px;
     margin-top: 40px;
   }
 
@@ -88,7 +88,7 @@
   }
 
   .designer-name {
-    font-size: 1.4rem;
+    font-size: 2.5rem;
     font-weight: 600;
   }
 
@@ -116,6 +116,10 @@
     font-size: 0.9rem;
   }
 
+  .designer-links {
+    margin-top: 8px;
+  }
+
   .designer-links a {
     display: block;
     color: #0066cc;
@@ -129,7 +133,7 @@
   }
 
   .verified-badge {
-    margin-top: 16px;
+    margin-top: 8px;
     background: #e8f5e9;
     color: #2e7d32;
     border-radius: 6px;
@@ -168,3 +172,7 @@
   ]
 }
 {% endschema %}
+
+<script>
+  console.log({{ shop.metaobjects.designer.values | json}});
+</script>
