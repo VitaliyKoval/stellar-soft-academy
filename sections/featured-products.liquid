@@ -1,0 +1,296 @@
+{% schema %}
+{
+  "name": "Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Number of Products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show Price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show Rating",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show Add to Cart Button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Products",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="featured-products-section" data-section-id="{{ section.id }}">
+  {% if section.settings.heading != blank %}
+    <h2>{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <select class="featured-products-sort" aria-label="Sort products">
+    <option value="best-selling">Best Selling</option>
+    <option value="price-ascending">Price: Low to High</option>
+    <option value="price-descending">Price: High to Low</option>
+    <option value="title-ascending">Title: A–Z</option>
+    <option value="title-descending">Title: Z–A</option>
+  </select>
+
+  <div class="featured-products-list"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sectionEl = document.querySelector('.featured-products-section[data-section-id="{{ section.id }}"]');
+    const container = sectionEl.querySelector('.featured-products-list');
+    const sortSelect = sectionEl.querySelector('.featured-products-sort');
+
+    const Products = [
+      {% for product in collections[section.settings.collection].products limit: section.settings.products_limit %}
+        {% assign variant = product.first_available_variant %}
+        {% if variant %}
+        {
+          id: {{ variant.id }},
+          title: "{{ product.title | escape }}",
+          url: "{{ product.url }}",
+          price: {{ product.price | divided_by: 100.0 }},
+          image: "{{ product.featured_image | img_url: '300x300' }}",
+          rating: "{{ product.first_available_variant.option3 }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endif %}
+      {% endfor %}
+    ];
+
+    function renderProducts(products) {
+      container.innerHTML = '';
+
+      products.forEach(product => {
+        const html = `
+          <div class="product-item" data-variant-id="${product.id}">
+            <a href="${product.url}">
+              <img src="${product.image}" alt="${product.title}" width="300" height="300" loading="lazy">
+              <h3>${product.title}</h3>
+            </a>
+            {% if section.settings.show_price %}
+              <p class="product-price">$${product.price.toFixed(2)}</p>
+            {% endif %}
+            {% if section.settings.show_rating %}
+              <div class="product-rating" data-rating="${product.rating}"></div>
+            {% endif %}
+            {% if section.settings.show_add_to_cart %}
+              <button class="add-to-cart-btn" data-variant-id="${product.id}">Add to Cart</button>
+            {% endif %}
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+      });
+
+      container.querySelectorAll('.product-rating').forEach(ratingEl => {
+        const rating = parseFloat(ratingEl.dataset.rating) || 0;
+        renderStars(ratingEl, rating);
+      });
+
+      attachAddToCartEvents();
+    }
+
+    function renderStars(container, rating) {
+      const maxStars = 5;
+      container.innerHTML = '';
+      for (let i = 1; i <= maxStars; i++) {
+        const star = document.createElement('span');
+        if (rating >= i) star.className = 'star full';
+        else if (rating >= i - 0.5) star.className = 'star half';
+        else star.className = 'star empty';
+        container.appendChild(star);
+      }
+    }
+
+    function sortProducts(option) {
+      let sorted = [...Products];
+      if (option === 'price-ascending') sorted.sort((a, b) => a.price - b.price);
+      if (option === 'price-descending') sorted.sort((a, b) => b.price - a.price);
+      if (option === 'title-ascending') sorted.sort((a, b) => a.title.localeCompare(b.title));
+      if (option === 'title-descending') sorted.sort((a, b) => b.title.localeCompare(a.title));
+      return sorted;
+    }
+
+    function attachAddToCartEvents() {
+      sectionEl.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', async function () {
+          const variantId = this.dataset.variantId;
+          if (!variantId) {
+            alert('This product cannot be added to cart.');
+            return;
+          }
+
+          this.disabled = true;
+          this.textContent = 'Adding...';
+
+          try {
+            const res = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: variantId, quantity: 1 })
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+
+            const data = await res.json();
+
+            this.textContent = 'Added ✓';
+            setTimeout(() => {
+              this.textContent = 'Add to Cart';
+              this.disabled = false;
+            }, 1000);
+
+            window.dispatchEvent(new CustomEvent('cart:updated'));
+          } catch (err) {
+            console.error('Add to cart failed:', err);
+            alert('Failed to add product to cart.');
+            this.disabled = false;
+            this.textContent = 'Add to Cart';
+          }
+        });
+      });
+    }
+
+    renderProducts(Products);
+    sortSelect.addEventListener('change', () => {
+      const sorted = sortProducts(sortSelect.value);
+      renderProducts(sorted);
+    });
+
+    async function updateShopifyCartBubble() {
+      try {
+        const res = await fetch('/cart.js');
+        if (!res.ok) throw new Error('Failed to fetch cart');
+        const cart = await res.json();
+
+        const bubble = document.querySelector('#cart-icon-bubble .cart-count-bubble');
+        const countEl = bubble ? bubble.querySelector('[aria-hidden="true"]') : null;
+
+        if (bubble && countEl) {
+          if (cart.item_count > 0) {
+            bubble.classList.remove('hidden');
+            countEl.textContent = cart.item_count;
+          } else {
+            bubble.classList.add('hidden');
+            countEl.textContent = '0';
+          }
+        }
+      } catch (error) {
+        console.error('Cart bubble update failed:', error);
+      }
+    }
+
+    updateShopifyCartBubble();
+    window.addEventListener('cart:updated', updateShopifyCartBubble);
+  });
+</script>
+
+<style>
+  .featured-products-section {
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  .featured-products-section h2 {
+    text-align: center;
+  }
+
+  .featured-products-sort {
+    margin: 0 auto 40px;
+    display: block;
+  }
+
+  .featured-products-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .product-item {
+    max-width: 300px;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .product-rating {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .product-rating .star {
+    display: inline-block;
+    width: 17px;
+    height: 16px;
+    margin-right: 4px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  .product-rating .star.full {
+    background-image: url({{'full-star.svg'|asset_url}});
+  }
+
+  .product-rating .star.half {
+    background-image: url({{'half-star.svg'|asset_url}});
+  }
+
+  .product-rating .star.empty {
+    background-image: url({{'empty-star.svg'|asset_url}});
+  }
+
+  .add-to-cart-btn {
+    margin-top: 12px;
+    padding: 8px 14px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .add-to-cart-btn:hover:not(:disabled) {
+    background: #333;
+  }
+
+  .add-to-cart-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>

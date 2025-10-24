@@ -9,6 +9,66 @@
  */
 {
   "sections": {
+    "featured_products_qTQH3m": {
+      "type": "featured-products",
+      "name": "Featured Products",
+      "settings": {
+        "heading": "All Sneakers",
+        "collection": "all-sneakers",
+        "products_limit": 12,
+        "show_price": true,
+        "show_rating": true,
+        "show_add_to_cart": true
+      }
+    },
+    "promo_banners_enRyde": {
+      "type": "promo-banners",
+      "blocks": {
+        "banner_BLCNiq": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Slide-3.jpg",
+            "title": "Original sneakers from Nike and other top brands that make every step feel special.",
+            "button_text": "Shop the Collection",
+            "button_link": "shopify://collections/frontpage",
+            "aspect_ratio": "3-2"
+          }
+        },
+        "banner_3t97Tg": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Slide-2.jpg",
+            "title": "Original sneakers from Nike and other top brands that make every step feel special.",
+            "button_text": "Shop the Collection",
+            "button_link": "shopify://collections/frontpage",
+            "aspect_ratio": "3-2"
+          }
+        },
+        "banner_gwf3wz": {
+          "type": "banner",
+          "settings": {
+            "image": "shopify://shop_images/Slide-1.jpg",
+            "title": "Original sneakers from Nike and other top brands that make every step feel special.",
+            "button_text": "Shop the Collection",
+            "button_link": "shopify://collections/frontpage",
+            "aspect_ratio": "3-2"
+          }
+        }
+      },
+      "block_order": [
+        "banner_BLCNiq",
+        "banner_3t97Tg",
+        "banner_gwf3wz"
+      ],
+      "name": "Promo Banners",
+      "settings": {
+        "heading": "More than just shoes — it’s a part of your story.",
+        "subheading": "<p>Original sneakers from Nike and other top brands that make every step feel special.</p>",
+        "text_alignment": "center",
+        "padding": 40,
+        "color_scheme": "dark"
+      }
+    },
     "product_banner_iGWKNw": {
       "type": "product-banner",
       "name": "Product Banner",
@@ -187,6 +247,8 @@
     }
   },
   "order": [
+    "featured_products_qTQH3m",
+    "promo_banners_enRyde",
     "product_banner_iGWKNw",
     "slideshow_MYmQJq",
     "video_DQrxnw",

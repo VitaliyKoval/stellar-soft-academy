@@ -1,0 +1,226 @@
+{% schema %}
+{
+  "name": "Promo Banners",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Section padding (px)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "light"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Aspect ratio",
+          "options": [
+            { "value": "16-9", "label": "16:9" },
+            { "value": "1-1", "label": "1:1" },
+            { "value": "3-2", "label": "3:2" }
+          ],
+          "default": "16-9"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Promo Banners",
+      "category": "Custom sections"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .promo-banners {
+    width: 100%;
+    box-sizing: border-box;
+    padding: {{ section.settings.padding }}px;
+  }
+
+  .promo-banners.color-scheme-light {
+    background-color: #ffffff;
+    color: #000;
+  }
+
+  .promo-banners.color-scheme-dark {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .promo-banners.color-scheme-dark h2{
+    color: #fff;
+  }
+
+  .promo-banners.color-scheme-accent {
+    background-color: #b3e5fc;
+    color: #000;
+  }
+
+  .promo-banners__header {
+    text-align: {{ section.settings.text_alignment }};
+    margin-bottom: 30px;
+  }
+
+  .promo-banners__grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .promo-banners__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .promo-banners__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .promo-banners__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #eee;
+  }
+
+  .promo-banners__item--16-9 { aspect-ratio: 16 / 9; }
+  .promo-banners__item--1-1  { aspect-ratio: 1 / 1; }
+  .promo-banners__item--3-2  { aspect-ratio: 3 / 2; }
+
+  .promo-banners__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .promo-banners__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .promo-banners__overlay h3{
+      color: #fff;
+  }
+
+  .promo-banners__button {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 14px;
+    background: #fff;
+    color: #000;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+</style>
+
+<section class="promo-banners color-scheme-{{ section.settings.color_scheme }}">
+  <div class="promo-banners__header">
+    {% if section.settings.heading != blank %}
+      <h2>{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <div class="rte">{{ section.settings.subheading }}</div>
+    {% endif %}
+  </div>
+
+  <div class="promo-banners__grid">
+    {% for block in section.blocks %}
+      {% if block.type == 'banner' %}
+        <div
+          id="promo-banner-{{ block.id }}"
+          class="promo-banners__item promo-banners__item--{{ block.settings.aspect_ratio }}"
+          data-block-id="{{ block.id }}"
+          data-block-type="banner"
+        >
+          {% if block.settings.image %}
+            <img
+              src="{{ block.settings.image | img_url: 'master' }}"
+              alt="{{ block.settings.title | escape }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              loading="lazy"
+            >
+          {% endif %}
+
+          <div class="promo-banners__overlay">
+            {% if block.settings.title %}
+              <h3>{{ block.settings.title }}</h3>
+            {% endif %}
+            {% if block.settings.button_text and block.settings.button_link %}
+              <a href="{{ block.settings.button_link }}" class="promo-banners__button">
+                {{ block.settings.button_text }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
