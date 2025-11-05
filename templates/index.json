@@ -9,14 +9,6 @@
  */
 {
   "sections": {
-    "designers_i9wYmQ": {
-      "type": "designers",
-      "name": "Designers section",
-      "settings": {
-        "heading": "Our Designers",
-        "subheading": "<p>Meet the creative minds behind our collections.</p>"
-      }
-    },
     "featured_products_qTQH3m": {
       "type": "featured-products",
       "name": "Featured Products",
@@ -255,7 +247,6 @@
     }
   },
   "order": [
-    "designers_i9wYmQ",
     "featured_products_qTQH3m",
     "promo_banners_enRyde",
     "product_banner_iGWKNw",
