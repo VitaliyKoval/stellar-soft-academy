@@ -1,4 +1,8 @@
 {% form 'contact', class: 'contact-form', id: 'ContactForm', aria-busy: 'false' %}
+  {% if section.settings.form_title != blank %}
+    <h2 class="contact-form__title">{{ section.settings.form_title }}</h2>
+  {% endif %}
+
   {% if form.errors %}
     <div class="form-errors" role="alert" aria-live="assertive">
       {{ form.errors | default_errors }}
@@ -74,7 +78,14 @@
 {% schema %}
 {
   "name": "Contact form",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form title",
+      "default": "Contact us"
+    }
+  ],
   "presets": [
     {
       "name": "Contact form"
@@ -86,11 +97,18 @@
 {% style %}
   .contact-form {
     max-width: 500px;
-    margin: 20px auto;
+    margin: 40px auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     font-family: inherit;
+  }
+
+  .contact-form__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
   }
 
   .contact-form label {
@@ -122,6 +140,10 @@
     cursor: pointer;
     font-weight: 600;
     transition: opacity 0.2s ease-in-out;
+  }
+
+  .contact-form button:hover {
+    opacity: 0.85;
   }
 
   .contact-form button:disabled,

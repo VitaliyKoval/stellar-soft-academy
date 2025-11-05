@@ -1,6 +1,10 @@
 {% assign selected_product = all_products[section.settings.product_handle] %}
 
 {% if selected_product %}
+  {% if section.settings.form_title != blank %}
+    <h2 class="product-form__title">{{ section.settings.form_title }}</h2>
+  {% endif %}
+
   {% form 'product', selected_product, class: 'product-form', id: 'ProductForm', aria-busy: 'false' %}
     {% if form.errors %}
       <div class="form-errors" role="alert" aria-live="assertive">
@@ -74,6 +78,12 @@
       "type": "product",
       "id": "product_handle",
       "label": "Select product"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form title",
+      "default": "Product inquiry"
     }
   ],
   "presets": [
@@ -85,9 +95,16 @@
 {% endschema %}
 
 {% style %}
+  .product-form__title {
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 30px 0 20px;
+  }
+
   .product-form {
     max-width: 400px;
-    margin: 20px auto;
+    margin: 0 auto 40px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -119,6 +136,10 @@
     cursor: pointer;
     font-weight: 600;
     transition: opacity 0.2s ease-in-out;
+  }
+
+  .product-form button:hover {
+    opacity: 0.85;
   }
 
   .product-form button:disabled {
