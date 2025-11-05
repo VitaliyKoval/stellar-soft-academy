@@ -124,7 +124,7 @@
           },
         });
 
-        if (response.ok) {
+        if (response.ok || response.redirected) {
           form.reset();
           form.insertAdjacentHTML('beforeend', `<p class="form-success">Message sent successfully!</p>`);
 
