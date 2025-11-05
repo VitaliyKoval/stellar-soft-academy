@@ -94,6 +94,64 @@
 }
 {% endschema %}
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('#ContactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // submit
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'contact_form_submit',
+        });
+      }
+
+      // clear
+      form.querySelectorAll('.form-success, .form-errors').forEach((el) => el.remove());
+
+      const formData = new FormData(form);
+      const action = form.getAttribute('action');
+
+      try {
+        const response = await fetch(action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        });
+
+        if (response.ok) {
+          form.reset();
+          form.insertAdjacentHTML('beforeend', `<p class="form-success">Message sent successfully!</p>`);
+
+          // success
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              event: 'contact_form_success',
+            });
+          }
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      } catch (error) {
+        form.insertAdjacentHTML('beforeend', `<p class="form-errors">Something went wrong. Try again.</p>`);
+
+        // error
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            event: 'contact_form_error',
+            error_message: error.message,
+          });
+        }
+      }
+    });
+  });
+</script>
+
 {% style %}
   .contact-form {
     max-width: 500px;
