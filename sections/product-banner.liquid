@@ -1,268 +1,346 @@
+{{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-{{ 'custom-product-banner.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
-<section class="product">
-  <div class="wrapper">
-    {% assign product = all_products[section.settings.product] %}
-    {% if product != blank %}
-      <div class="product__gallery">
-        <div class="swiper product__gallery-swiper">
-          <div class="swiper-wrapper product__galelly-items">
-            {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
-            {% if variant_gallery != blank %}
-              {% for image in variant_gallery %}
-                <div class="swiper-slide">
-                  <img
-                    class="product__gallery-item {% if forloop.first %}active{% endif %}"
-                    src="{{ image | img_url: '88x88' }}"
-                    alt="{{ product.title | escape }}"
-                    width="88"
-                    height="88"
-                  >
-                </div>
-              {% endfor %}
-            {% endif %}
+<section class="py-20">
+  <div class="max-w-screen-xl mx-auto flex flex-col lg:flex-row gap-12 px-4">
+    <div class="flex flex-col lg:flex-row-reverse gap-6">
+      <div class="relative w-536px h-536px rounded-lg overflow-hidden">
+        <img
+          class="w-full h-full object-cover"
+          src="{{ product.featured_image | img_url: '536x536' }}"
+          alt="{{ product.title | escape }}"
+          width="536"
+          height="536"
+        >
+        {% assign badge_text = product.metafields.badge.badge_text %}
+        {% if badge_text %}
+          <div class="absolute top-4 left-4 flex items-center gap-1 bg-white rounded-md px-2 py-1 text-sm font-medium text-gray-800">
+            <img src="{{ 'star-small.svg' | asset_url }}" alt="star" width="20" height="20">
+            <span>{{ badge_text }}</span>
           </div>
-        </div>
-        <div class="product__gallery-main">
-          {% if variant_gallery != blank %}
-            {% for image in variant_gallery %}
-              {%- if forloop.first -%}
-                <img
-                  class="product__gallery-img"
-                  src="{{ image | img_url: '536x536' }}"
-                  alt="{{ product.title | escape }}"
-                  width="536"
-                  height="536"
-                >
-              {%- endif -%}
-            {% endfor %}
-          {% endif %}
-          {% assign badge_text = product.metafields.badge.badge_text %}
-          {% if badge_text != blank %}
-            <div class="product__gallery-badge">
-              <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" alt="star"
-              ><span>{{ badge_text }}</span>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="product__options">
-        <div class="product__options-container">
-          {% if product.title %}
-            <h3 class="product__options-header">{{ product.title }}</h3>
-          {% endif %}
-          {% if product.price %}
-            <span class="product__options-price">{{ product.price | money_without_currency | prepend: '$' }}</span>
-          {% endif %}
-          <div class="product__options-items">
-            {% if product.images != blank %}
-              {% for image in product.images %}
-                <img
-                  src="{{ image | img_url: '88x88' }}"
-                  alt="{{ product.title | escape }}"
-                  class="product__options-item {% if forloop.first %}active{% endif %}"
-                  data-set-item="{{ forloop.index0 }}"
-                  width="88"
-                  height="88"
-                >
-              {% endfor %}
-            {% endif %}
-          </div>
-          <p class="product__options-title">Select Size:</p>
-          <div class="product__options-sizes">
-            {% for variant in product.variants %}
-              {% assign color = variant.option1 | strip | downcase %}
-              {% if color == 'white' and variant.available %}
-                {% assign size = variant.option2 %}
-                <div
-                  class="product__options-size {% if forloop.first %}active{% endif %}"
-                  data-variant-id="{{ variant.id }}"
-                >
-                  UK {{ size }}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-
-        <form method="post" action="/cart/add">
-          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-          <button type="submit" class="product__options-add">Add To Bag</button>
-        </form>
-
-        {% if product.description %}
-          <p class="product__options-note">
-            {{ product.description | strip_html }}
-          </p>
         {% endif %}
       </div>
-    {% endif %}
+
+      <div class="flex lg:flex-col gap-4 lg:w-88px">
+        {% for image in product.images limit: 4 %}
+          <img
+            src="{{ image | img_url: '88x88' }}"
+            class="w-88 h-88 rounded-lg object-cover border border-transparent hover:border-gray-800 cursor-pointer transition"
+            alt="{{ product.title }}"
+            width="88"
+            height="88"
+          >
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="max-w-lg space-y-6">
+      <h2 class="text-2xl font-semibold text-gray-900">{{ product.title }}</h2>
+      <p class="text-gray-500 text-lg font-medium">{{ product.price | money }}</p>
+
+      <div class="space-y-4">
+        <p class="text-sm font-semibold text-gray-800">Select Size:</p>
+        <div class="flex flex-wrap gap-3">
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <button
+                class="border border-gray-300 rounded-lg px-4 py-2 text-sm hover:bg-gray-100 focus:ring focus:ring-gray-300"
+                data-variant-id="{{ variant.id }}"
+              >
+                UK {{ variant.option2 }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <form method="post" action="/cart/add" class="space-y-4">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        <button
+          type="submit"
+          class="w-full bg-black text-white rounded-lg py-3 font-semibold hover:bg-gray-800 transition"
+        >
+          {{ 'products.product.add_to_cart' | t }}
+        </button>
+      </form>
+
+      {% if product.description %}
+        <p class="text-sm text-gray-500">{{ product.description | strip_html }}</p>
+      {% endif %}
+    </div>
   </div>
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const price = document.querySelector('.product__options-price');
-    const productGallery = document.querySelector('.product__galelly-items');
-    const mainImage = document.querySelector('.product__gallery-img');
-    const groups = document.querySelector('.product__options-items');
-    const sizesElement  = document.querySelector('.product__options-sizes');
-    const addButton = document.querySelector('.product__options-add');
-    const colors = ['white', 'black', 'purple'];
-    const groupThumbs = [];
+{% comment %}
+  {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+  {{ 'custom-product-banner.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
-    const gallerySwiper = new Swiper('.product__gallery-swiper', {
-      direction: "vertical",
-      slidesPerView: "auto",
-      freeMode: true,
-      breakpoints: {
-        1196: {
-          direction: "vertical",
-          spaceBetween: 24,
-        },
-        680: {
-          direction: "horizontal",
-          spaceBetween: 24,
-        },
-        0: {
-          direction: "horizontal",
-          spaceBetween: 16,
-        },
-      },
-    });
-
-    const productData = {
-    variants: [
-      {% for variant in product.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title }}",
-          price: "{{ variant.price | money_without_currency | prepend: '$' }}",
-          color: "{{ variant.option1 | strip | downcase }}",
-          size: "{{ variant.option2 }}",
-          available: {{ variant.available }},
-          gallery: [
-            {% assign variant_gallery = variant.metafields.gallery.variant_gallery.value %}
+  <section class="product">
+    <div class="wrapper">
+      {% assign product = all_products[section.settings.product] %}
+      {% if product != blank %}
+        <div class="product__gallery">
+          <div class="swiper product__gallery-swiper">
+            <div class="swiper-wrapper product__galelly-items">
+              {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
+              {% if variant_gallery != blank %}
+                {% for image in variant_gallery %}
+                  <div class="swiper-slide">
+                    <img
+                      class="product__gallery-item {% if forloop.first %}active{% endif %}"
+                      src="{{ image | img_url: '88x88' }}"
+                      alt="{{ product.title | escape }}"
+                      width="88"
+                      height="88"
+                    >
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="product__gallery-main">
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
-                "{{ image | img_url: '88x88' }}"{% unless forloop.last %},{% endunless %}
+                {%- if forloop.first -%}
+                  <img
+                    class="product__gallery-img"
+                    src="{{ image | img_url: '536x536' }}"
+                    alt="{{ product.title | escape }}"
+                    width="536"
+                    height="536"
+                  >
+                {%- endif -%}
               {% endfor %}
             {% endif %}
-          ]
-        }{% unless forloop.last %},{% endunless %}
-      {% endfor %}
-    ]};
+            {% assign badge_text = product.metafields.badge.badge_text %}
+            {% if badge_text != blank %}
+              <div class="product__gallery-badge">
+                <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" alt="star"
+                ><span>{{ badge_text }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
 
-    for (const color of colors) {
-      for (const variant of productData.variants) {
-        if(variant.color === color) {
-          groupThumbs.push([...variant.gallery]);
-          break;
-        }
-      }
-    }
+        <div class="product__options">
+          <div class="product__options-container">
+            {% if product.title %}
+              <h3 class="product__options-header">{{ product.title }}</h3>
+            {% endif %}
+            {% if product.price %}
+              <span class="product__options-price">{{ product.price | money_without_currency | prepend: '$' }}</span>
+            {% endif %}
+            <div class="product__options-items">
+              {% if product.images != blank %}
+                {% for image in product.images %}
+                  <img
+                    src="{{ image | img_url: '88x88' }}"
+                    alt="{{ product.title | escape }}"
+                    class="product__options-item {% if forloop.first %}active{% endif %}"
+                    data-set-item="{{ forloop.index0 }}"
+                    width="88"
+                    height="88"
+                  >
+                {% endfor %}
+              {% endif %}
+            </div>
+            <p class="product__options-title">Select Size:</p>
+            <div class="product__options-sizes">
+              {% for variant in product.variants %}
+                {% assign color = variant.option1 | strip | downcase %}
+                {% if color == 'white' and variant.available %}
+                  {% assign size = variant.option2 %}
+                  <div
+                    class="product__options-size {% if forloop.first %}active{% endif %}"
+                    data-variant-id="{{ variant.id }}"
+                  >
+                    UK {{ size }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
 
-    productGallery.addEventListener('click', (e) => {
-      const thumb = e.target.closest('.product__gallery-item');
-      if (!thumb) return;
+          <form method="post" action="/cart/add">
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+            <button type="submit" class="product__options-add">Add To Bag</button>
+          </form>
 
-      if (!thumb.classList.contains('active')) {
-        const src = thumb.getAttribute('src');
-        const mainSrc = src.replace(/_\d+x\d+/, '_536x536');
-        mainImage.setAttribute('src', mainSrc);
+          {% if product.description %}
+            <p class="product__options-note">
+              {{ product.description | strip_html }}
+            </p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endcomment %}
 
-        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
-        thumb.classList.add('active');
-      }
-    });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const price = document.querySelector('.product__options-price');
+      const productGallery = document.querySelector('.product__galelly-items');
+      const mainImage = document.querySelector('.product__gallery-img');
+      const groups = document.querySelector('.product__options-items');
+      const sizesElement  = document.querySelector('.product__options-sizes');
+      const addButton = document.querySelector('.product__options-add');
+      const colors = ['white', 'black', 'purple'];
+      const groupThumbs = [];
 
-    groups.addEventListener('click', (e) => {
-      const groupImage = e.target.closest('.product__options-item');
-      if (!groupImage) return;
-
-      if (!groupImage.classList.contains('active')) {
-        const groupNumber = parseInt(groupImage.dataset.setItem);
-
-        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
-
-        const newThumbs = productGallery.querySelectorAll('.product__gallery-item');
-        const currentThumbs = groupThumbs[groupNumber];
-        newThumbs.forEach((thumb, index) => {
-          thumb.setAttribute('src', currentThumbs[index]);
-        });
-        newThumbs[0].classList.add('active');
-
-        const mainSrc = currentThumbs[0].replace(/_\d+x\d+/, '_536x536');
-        mainImage.setAttribute('src', mainSrc);
-
-        groups.querySelector('.product__options-item.active')?.classList.remove('active');
-        groupImage.classList.add('active');
-
-        sizesElement.innerHTML = "";
-        const color = colors[groupNumber];
-        const variants = productData.variants.filter(variant => variant.color === color && variant.available);
-        price.textContent = variants[0].price;
-        
-        for (let i = 0; i < variants.length; i++) {
-          const variant = variants[i];
-          const div = document.createElement('div');
-          div.className = 'product__options-size';
-          if (i === 0) div.classList.add('active');
-          div.dataset.variantId = variant.id;
-          div.textContent = `UK ${variant.size}`;
-          sizesElement.appendChild(div);
-        }
-
-        const inputId = document.querySelector('form input[name="id"]');
-        if (inputId) inputId.value = variants[0].id;
-      }
-    });
-
-    sizesElement.addEventListener('click', (e) => {
-      const sizeElement = e.target.closest('.product__options-size');
-      if (!sizeElement) return;
-
-      if (!sizeElement.classList.contains('active')) {
-        const activeSizeElement = sizesElement.querySelector('.product__options-size.active');
-        activeSizeElement?.classList.remove('active');
-        sizeElement.classList.add('active');
-      }
-
-      const variantId = sizeElement.dataset.variantId;
-      const inputId = document.querySelector('form input[name="id"]');
-      if (inputId) inputId.value = variantId;
-    });
-
-    addButton.addEventListener('click', () => {
-      const activeSize = document.querySelector('.product__options-size.active');
-      if (!activeSize) {
-        return;
-      }
-      const variantId = activeSize.dataset.variantId;
-
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+      const gallerySwiper = new Swiper('.product__gallery-swiper', {
+        direction: "vertical",
+        slidesPerView: "auto",
+        freeMode: true,
+        breakpoints: {
+          1196: {
+            direction: "vertical",
+            spaceBetween: 24,
+          },
+          680: {
+            direction: "horizontal",
+            spaceBetween: 24,
+          },
+          0: {
+            direction: "horizontal",
+            spaceBetween: 16,
+          },
         },
-        body: JSON.stringify({
-          id: variantId,
-          quantity: 1
+      });
+
+      const productData = {
+      variants: [
+        {% for variant in product.variants %}
+          {
+            id: {{ variant.id }},
+            title: "{{ variant.title }}",
+            price: "{{ variant.price | money_without_currency | prepend: '$' }}",
+            color: "{{ variant.option1 | strip | downcase }}",
+            size: "{{ variant.option2 }}",
+            available: {{ variant.available }},
+            gallery: [
+              {% assign variant_gallery = variant.metafields.gallery.variant_gallery.value %}
+              {% if variant_gallery != blank %}
+                {% for image in variant_gallery %}
+                  "{{ image | img_url: '88x88' }}"{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              {% endif %}
+            ]
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]};
+
+      for (const color of colors) {
+        for (const variant of productData.variants) {
+          if(variant.color === color) {
+            groupThumbs.push([...variant.gallery]);
+            break;
+          }
+        }
+      }
+
+      productGallery.addEventListener('click', (e) => {
+        const thumb = e.target.closest('.product__gallery-item');
+        if (!thumb) return;
+
+        if (!thumb.classList.contains('active')) {
+          const src = thumb.getAttribute('src');
+          const mainSrc = src.replace(/_\d+x\d+/, '_536x536');
+          mainImage.setAttribute('src', mainSrc);
+
+          productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+          thumb.classList.add('active');
+        }
+      });
+
+      groups.addEventListener('click', (e) => {
+        const groupImage = e.target.closest('.product__options-item');
+        if (!groupImage) return;
+
+        if (!groupImage.classList.contains('active')) {
+          const groupNumber = parseInt(groupImage.dataset.setItem);
+
+          productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+
+          const newThumbs = productGallery.querySelectorAll('.product__gallery-item');
+          const currentThumbs = groupThumbs[groupNumber];
+          newThumbs.forEach((thumb, index) => {
+            thumb.setAttribute('src', currentThumbs[index]);
+          });
+          newThumbs[0].classList.add('active');
+
+          const mainSrc = currentThumbs[0].replace(/_\d+x\d+/, '_536x536');
+          mainImage.setAttribute('src', mainSrc);
+
+          groups.querySelector('.product__options-item.active')?.classList.remove('active');
+          groupImage.classList.add('active');
+
+          sizesElement.innerHTML = "";
+          const color = colors[groupNumber];
+          const variants = productData.variants.filter(variant => variant.color === color && variant.available);
+          price.textContent = variants[0].price;
+
+          for (let i = 0; i < variants.length; i++) {
+            const variant = variants[i];
+            const div = document.createElement('div');
+            div.className = 'product__options-size';
+            if (i === 0) div.classList.add('active');
+            div.dataset.variantId = variant.id;
+            div.textContent = `UK ${variant.size}`;
+            sizesElement.appendChild(div);
+          }
+
+          const inputId = document.querySelector('form input[name="id"]');
+          if (inputId) inputId.value = variants[0].id;
+        }
+      });
+
+      sizesElement.addEventListener('click', (e) => {
+        const sizeElement = e.target.closest('.product__options-size');
+        if (!sizeElement) return;
+
+        if (!sizeElement.classList.contains('active')) {
+          const activeSizeElement = sizesElement.querySelector('.product__options-size.active');
+          activeSizeElement?.classList.remove('active');
+          sizeElement.classList.add('active');
+        }
+
+        const variantId = sizeElement.dataset.variantId;
+        const inputId = document.querySelector('form input[name="id"]');
+        if (inputId) inputId.value = variantId;
+      });
+
+      addButton.addEventListener('click', () => {
+        e.preventDefault();
+        
+        const activeSize = document.querySelector('.product__options-size.active');
+        if (!activeSize) {
+          return;
+        }
+        const variantId = activeSize.dataset.variantId;
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: 1
+          })
         })
-      })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Added to cart:', data);
-      })
-      .catch(err => {
-        console.error('Error adding to cart:', err);
+        .then(res => res.json())
+        .then(data => {
+          console.log('Added to cart:', data);
+        })
+        .catch(err => {
+          console.error('Error adding to cart:', err);
+        });
       });
     });
-  });
-  console.log({{product | json}});
+    console.log({{product | json}});
 </script>
 
 {% schema %}
