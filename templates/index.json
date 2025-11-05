@@ -9,6 +9,16 @@
  */
 {
   "sections": {
+    "contact_form_gjXPnn": {
+      "type": "contact-form",
+      "name": "Contact form",
+      "settings": {}
+    },
+    "product_form_a8EnWF": {
+      "type": "product-form",
+      "name": "Product inquiry form",
+      "settings": {}
+    },
     "featured_products_qTQH3m": {
       "type": "featured-products",
       "name": "Featured Products",
@@ -247,6 +257,8 @@
     }
   },
   "order": [
+    "contact_form_gjXPnn",
+    "product_form_a8EnWF",
     "featured_products_qTQH3m",
     "promo_banners_enRyde",
     "product_banner_iGWKNw",
