@@ -8,32 +8,6 @@
  * ------------------------------------------------------------
  */
 {
-  "contact": {
-    "form": {
-      "title": "Contact us",
-      "name": "Your name",
-      "email": "Email address",
-      "phone": "Phone number",
-      "message": "Your message",
-      "submit": "Send message",
-      "success": "Thank you! We'll contact you soon."
-    }
-  },
-
-  "product": {
-    "form": {
-      "quantity": "Quantity",
-      "reason": "Reason for inquiry",
-      "reason_placeholder": "Enter reason...",
-      "contact": "Preferred contact method",
-      "contact_email": "Email",
-      "contact_phone": "Phone",
-      "add_to_cart": "Add to cart",
-      "unavailable": "Variant unavailable",
-      "success": "Product added successfully!"
-    }
-  },
-
   "settings_schema": {
     "global": {
       "settings": {
