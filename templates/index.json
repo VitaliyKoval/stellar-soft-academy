@@ -12,16 +12,13 @@
     "contact_form_gjXPnn": {
       "type": "contact-form",
       "name": "Contact form",
-      "settings": {
-        "form_title": "Contact us"
-      }
+      "settings": {}
     },
     "product_form_xk888V": {
       "type": "product-form",
       "name": "Product inquiry form",
       "settings": {
-        "product_handle": "nike-air-max-plus",
-        "form_title": "Product inquiry"
+        "product_handle": "nike-air-max-plus"
       }
     },
     "featured_products_qTQH3m": {

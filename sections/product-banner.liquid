@@ -312,7 +312,7 @@
         if (inputId) inputId.value = variantId;
       });
 
-      addButton.addEventListener('click', () => {
+      addButton.addEventListener('click', (e) => {
         e.preventDefault();
         
         const activeSize = document.querySelector('.product__options-size.active');
