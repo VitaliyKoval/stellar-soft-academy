@@ -14,10 +14,12 @@
       "name": "Contact form",
       "settings": {}
     },
-    "product_form_a8EnWF": {
+    "product_form_LEmq3z": {
       "type": "product-form",
       "name": "Product inquiry form",
-      "settings": {}
+      "settings": {
+        "product_handle": ""
+      }
     },
     "featured_products_qTQH3m": {
       "type": "featured-products",
@@ -258,7 +260,7 @@
   },
   "order": [
     "contact_form_gjXPnn",
-    "product_form_a8EnWF",
+    "product_form_LEmq3z",
     "featured_products_qTQH3m",
     "promo_banners_enRyde",
     "product_banner_iGWKNw",
