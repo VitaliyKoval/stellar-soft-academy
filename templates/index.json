@@ -9,6 +9,18 @@
  */
 {
   "sections": {
+    "contact_form_gjXPnn": {
+      "type": "contact-form",
+      "name": "Contact form",
+      "settings": {}
+    },
+    "product_form_xk888V": {
+      "type": "product-form",
+      "name": "Product inquiry form",
+      "settings": {
+        "product_handle": "nike-air-max-plus"
+      }
+    },
     "featured_products_qTQH3m": {
       "type": "featured-products",
       "name": "Featured Products",
@@ -247,6 +259,8 @@
     }
   },
   "order": [
+    "contact_form_gjXPnn",
+    "product_form_xk888V",
     "featured_products_qTQH3m",
     "promo_banners_enRyde",
     "product_banner_iGWKNw",

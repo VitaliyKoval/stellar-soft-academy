@@ -1,0 +1,217 @@
+{% assign selected_product = all_products[section.settings.product_handle] %}
+
+{% if selected_product %}
+  {% if section.settings.form_title != blank %}
+    <h2 class="product-form__title">{{ section.settings.form_title }}</h2>
+  {% endif %}
+
+  {% form 'product', selected_product, class: 'product-form', id: 'ProductForm', aria-busy: 'false' %}
+    {% if form.errors %}
+      <div class="form-errors" role="alert" aria-live="assertive">
+        {{ form.errors | default_errors }}
+      </div>
+    {% endif %}
+
+    {% if form.posted_successfully? %}
+      <p class="form-success" role="status" aria-live="polite">
+        {{ 'product.form.success' | t }}
+      </p>
+    {% endif %}
+
+    <input type="hidden" name="id" value="{{ selected_product.selected_or_first_available_variant.id }}">
+
+    <div class="form-group">
+      <label for="Quantity">{{ 'product.form.quantity' | t }}</label>
+      <input
+        id="Quantity"
+        name="quantity"
+        type="number"
+        value="1"
+        min="1"
+        {% unless selected_product.selected_or_first_available_variant.available %}
+          disabled
+        {% endunless %}
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="Reason">{{ 'product.form.reason' | t }}</label>
+      <input
+        id="Reason"
+        name="properties[Reason]"
+        type="text"
+        placeholder="{{ 'product.form.reason_placeholder' | t }}"
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="PreferredContact">{{ 'product.form.contact' | t }}</label>
+      <select id="PreferredContact" name="properties[Preferred contact]">
+        <option value="Email">{{ 'product.form.contact_email' | t }}</option>
+        <option value="Phone">{{ 'product.form.contact_phone' | t }}</option>
+      </select>
+    </div>
+
+    <button
+      type="submit"
+      class="btn"
+      {% unless selected_product.selected_or_first_available_variant.available %}
+        disabled
+      {% endunless %}
+    >
+      {% if selected_product.selected_or_first_available_variant.available %}
+        {{ 'product.form.add_to_cart' | t }}
+      {% else %}
+        {{ 'product.form.unavailable' | t }}
+      {% endif %}
+    </button>
+  {% endform %}
+{% else %}
+  <p>Please select a product in the section settings.</p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product inquiry form",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product_handle",
+      "label": "Select product"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form title",
+      "default": "Product inquiry"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product inquiry form"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const productForm = document.querySelector('#ProductForm');
+    if (!productForm) return;
+
+    productForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'product_inquiry_submit' });
+      }
+
+      productForm.querySelectorAll('.form-success, .form-errors').forEach((el) => el.remove());
+
+      const formData = new FormData(productForm);
+      const action = productForm.getAttribute('action');
+
+      try {
+        const response = await fetch(action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+
+        if (response.ok || response.redirected) {
+          productForm.reset();
+          productForm.insertAdjacentHTML(
+            'beforeend',
+            `<p class="form-success">Your inquiry was sent successfully!</p>`
+          );
+
+          if (window.dataLayer) {
+            window.dataLayer.push({ event: 'product_inquiry_success' });
+          }
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      } catch (error) {
+        productForm.insertAdjacentHTML(
+          'beforeend',
+          `<p class="form-errors">Something went wrong. Please try again.</p>`
+        );
+
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            event: 'product_inquiry_error',
+            error_message: error.message,
+          });
+        }
+      }
+    });
+  });
+</script>
+
+{% style %}
+  .product-form__title {
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 30px 0 20px;
+  }
+
+  .product-form {
+    max-width: 400px;
+    margin: 0 auto 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: inherit;
+  }
+
+  .product-form label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .product-form input,
+  .product-form select,
+  .product-form textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  .product-form button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .product-form button:hover {
+    opacity: 0.85;
+  }
+
+  .product-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .form-errors {
+    background-color: #ffecec;
+    color: #c00;
+    padding: 0.75rem;
+    border-radius: 4px;
+  }
+
+  .form-success {
+    background-color: #e6f9ec;
+    color: #2a7a3b;
+    padding: 0.75rem;
+    border-radius: 4px;
+  }
+{% endstyle %}
