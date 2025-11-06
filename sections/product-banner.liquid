@@ -3,11 +3,11 @@
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
 <section class="product">
-  <div class="wrapper max-w-app mx-auto py-20 px-15 flex gap-15">
+  <div class="wrapper max-w-[1440px] mx-auto py-20 px-15 flex gap-15">
     {% assign product = all_products[section.settings.product] %}
     {% if product != blank %}
       <div class="product__gallery flex gap-6 max-lg:flex-col-reverse max-lg:justify-end">
-        <div class="swiper product__gallery-swiper w-thumb h-main max-lg:w-main max-lg:h-thumb">
+        <div class="swiper product__gallery-swiper w-[88px] h-[536px] max-lg:w-[536px] max-lg:h-[88px]">
           <div class="swiper-wrapper product__galelly-items ">
             {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
@@ -25,12 +25,12 @@
             {% endif %}
           </div>
         </div>
-        <div class="product__gallery-main relative w-main h-main">
+        <div class="product__gallery-main relative w-[536px] h-[536px]">
           {% if variant_gallery != blank %}
             {% for image in variant_gallery %}
               {%- if forloop.first -%}
                 <img
-                  class="product__gallery-img w-main h-main object-cover object-center rounded-xl"
+                  class="product__gallery-img w-full h-full object-cover object-center rounded-xl"
                   src="{{ image | img_url: '536x536' }}"
                   alt="{{ product.title | escape }}"
                   width="536"
@@ -44,8 +44,8 @@
             <div
               class="
                 product__gallery-badge absolute flex gap-1 top-4 left-4
-                h-small p-3 rounded-xl
-                bg-white font-sans text-tiny leading-none text-gray-950
+                h-[36px] p-3 rounded-xl
+                bg-white font-sans text-[14px] leading-1.5 text-gray-950
               "
             >
               <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" class="h-8 w-8" alt="star"
@@ -58,14 +58,12 @@
       <div class="product__options max-w-[612px] min-h-[536px]">
         <div class="product__options-container">
           {% if product.title %}
-            <h3
-              class="product__options-header font-sans text-h3 leading-none text-gray-950"
-            >
+            <h3 class="product__options-header font-sans text-[30px] leading-none text-gray-950">
               {{ product.title }}
             </h3>
           {% endif %}
           {% if product.price %}
-            <span class="product__options-price inline-block mt-3 font-sans text-base leading-none text-gray-600">
+            <span class="product__options-price inline-block mt-3 font-sans text-[16px] leading-none text-gray-600">
               {{ product.price | money_without_currency | prepend: '$' }}
             </span>
           {% endif %}
@@ -75,7 +73,7 @@
                 <img
                   src="{{ image | img_url: '88x88' }}"
                   alt="{{ product.title | escape }}"
-                  class="product__options-item  w-thumb h-full object-cover object-center rounded-xl cursor-pointer {% if forloop.first %}active{% endif %} hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+                  class="product__options-item  w-[88px] h-full object-cover object-center rounded-xl cursor-pointer {% if forloop.first %}active border border-gray-950 hover:shadow-none{% endif %} hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                   data-set-item="{{ forloop.index0 }}"
                   width="88"
                   height="88"
@@ -83,7 +81,7 @@
               {% endfor %}
             {% endif %}
           </div>
-          <p class="product__options-title mt-8 font-sans text-tiny leading-none text-gray-950">Select Size:</p>
+          <p class="product__options-title mt-8 font-sans text-[14px] leading-none text-gray-950">Select Size:</p>
           <div class="product__options-sizes mt-3 max-w-[612px] flex flex-wrap gap-2">
             {% for variant in product.variants %}
               {% assign color = variant.option1 | strip | downcase %}
