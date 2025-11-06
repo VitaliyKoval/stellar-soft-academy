@@ -2,13 +2,62 @@
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
-<section class="product">
-  <div class="wrapper max-w-[1440px] mx-auto py-20 px-15 flex gap-15">
+<script>
+  let htmlElement;
+  let themeToggleBtn;
+
+  function updateIcon() {
+    if (!themeToggleBtn) return;
+    const isDark = htmlElement.classList.contains('dark');
+    themeToggleBtn.textContent = isDark ? '🌙' : '☀️';
+  }
+
+  function initDarkMode() {
+    htmlElement = document.documentElement;
+    themeToggleBtn = document.querySelector('.dark-mode .icon');
+
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme === 'dark') {
+      htmlElement.classList.add('dark');
+    } else if (savedTheme === 'light') {
+      htmlElement.classList.remove('dark');
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      htmlElement.classList.add('dark');
+    }
+
+    updateIcon();
+  }
+
+  window.toggleDarkMode = function () {
+    if (!htmlElement || !themeToggleBtn) {
+      console.error('Елементи Dark Mode не знайдені!');
+      return;
+    }
+
+    const isCurrentlyDark = htmlElement.classList.toggle('dark');
+    const newTheme = isCurrentlyDark ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+    updateIcon();
+  };
+
+  document.addEventListener('DOMContentLoaded', initDarkMode);
+</script>
+
+<button
+  onclick="toggleDarkMode()"
+  class="dark-mode rounded-lg shadow p-3 flex items-center mx-auto my-4 text-base justify-center bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+>
+  Dark Mode: <span class="icon text-xl text-gray-950 dark:text-gray-200">☀️</span>
+</button>
+
+<section class="product dark:bg-gray-950 dark:text-gray-200">
+  <div class="wrapper max-w-app mx-auto py-20 px-15 flex gap-15 flex-wrap justify-center items-center">
     {% assign product = all_products[section.settings.product] %}
     {% if product != blank %}
-      <div class="product__gallery flex gap-6 max-lg:flex-col-reverse max-lg:justify-end">
-        <div class="swiper product__gallery-swiper w-[88px] h-[536px] max-lg:w-[536px] max-lg:h-[88px]">
-          <div class="swiper-wrapper product__galelly-items ">
+      <div class="product__gallery flex gap-6 max-lg:max-w-[640px]">
+        <div class="swiper product__gallery-swiper w-[88px] h-[536px]">
+          <div class="swiper-wrapper product__galelly-items">
             {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
@@ -45,7 +94,7 @@
               class="
                 product__gallery-badge absolute flex gap-1 top-4 left-4
                 h-[36px] p-3 rounded-xl
-                bg-white font-sans text-[14px] leading-1.5 text-gray-950
+                bg-white font-sans text-tiny leading-none text-gray-950
               "
             >
               <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" class="h-8 w-8" alt="star"
@@ -55,15 +104,15 @@
         </div>
       </div>
 
-      <div class="product__options max-w-[612px] min-h-[536px]">
+      <div class="product__options max-w-[612px] min-h-[536px] max-lg:max-w-[536px]">
         <div class="product__options-container">
           {% if product.title %}
-            <h3 class="product__options-header font-sans text-[30px] leading-none text-gray-950">
+            <h3 class="product__options-header font-sans leading-none text-gray-950 !dark:text-gray-200">
               {{ product.title }}
             </h3>
           {% endif %}
           {% if product.price %}
-            <span class="product__options-price inline-block mt-3 font-sans text-[16px] leading-none text-gray-600">
+            <span class="product__options-price inline-block mt-3 font-sans text-base leading-none text-gray-600 dark:text-gray-200">
               {{ product.price | money_without_currency | prepend: '$' }}
             </span>
           {% endif %}
@@ -73,7 +122,7 @@
                 <img
                   src="{{ image | img_url: '88x88' }}"
                   alt="{{ product.title | escape }}"
-                  class="product__options-item  w-[88px] h-full object-cover object-center rounded-xl cursor-pointer {% if forloop.first %}active border border-gray-950 hover:shadow-none{% endif %} hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+                  class="product__options-item  w-[88px] h-full object-cover object-center rounded-xl cursor-pointer {% if forloop.first %}active{% endif %} hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                   data-set-item="{{ forloop.index0 }}"
                   width="88"
                   height="88"
@@ -81,7 +130,7 @@
               {% endfor %}
             {% endif %}
           </div>
-          <p class="product__options-title mt-8 font-sans text-[14px] leading-none text-gray-950">Select Size:</p>
+          <p class="product__options-title mt-8 font-sans text-tiny leading-none text-gray-950">Select Size:</p>
           <div class="product__options-sizes mt-3 max-w-[612px] flex flex-wrap gap-2">
             {% for variant in product.variants %}
               {% assign color = variant.option1 | strip | downcase %}
@@ -91,7 +140,7 @@
                   class="
                     product__options-size {% if forloop.first %}active{% endif %} bg-white border border-gray-200 rounded-xl p-7
                     w-[198px] h-[52px] text-center
-                    font-sans text-[14px] leading-none text-gray-950 cursor-pointer hover:bg-gray-200 max-xl:w-[167.5px]
+                    font-sans text-tiny leading-none text-gray-950 cursor-pointer hover:bg-gray-200
                   "
                   data-variant-id="{{ variant.id }}"
                 >
@@ -108,8 +157,8 @@
             type="submit"
             class="
               product__options-add mt-8 w-full h-[56px]
-              flex items-center justify-center
-              bg-gray-950 text-white text-[16px] leading-none font-sans
+              flex items-center justify-center dark:text-gray-950 dark:bg-white
+              bg-gray-950 text-white text-base leading-none font-sans
               py-4 px-8 rounded-xl border-none cursor-pointer hover:bg-gray-600 hover:text-gray-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]
             "
           >
@@ -118,7 +167,7 @@
         </form>
 
         {% if product.description %}
-          <p class="product__options-note mt-8 font-sans text-[14px] leading-normal text-gray">
+          <p class="product__options-note mt-8 font-sans text-tiny leading-normal text-gray">
             {{ product.description | strip_html }}
           </p>
         {% endif %}
@@ -249,8 +298,9 @@
         direction: "vertical",
         slidesPerView: "auto",
         freeMode: true,
-        breakpoints: {
-          1280: {
+        spaceBetween: 24,
+        {% comment %} breakpoints: {
+          1196: {
             direction: "vertical",
             spaceBetween: 24,
           },
@@ -262,7 +312,7 @@
             direction: "horizontal",
             spaceBetween: 16,
           },
-        },
+        }, {% endcomment %}
       });
 
       const productData = {
@@ -340,7 +390,7 @@
           for (let i = 0; i < variants.length; i++) {
             const variant = variants[i];
             const div = document.createElement('div');
-            div.className = 'product__options-size';
+            div.className = "product__options-size bg-white border border-gray-200 rounded-xl p-7 w-[198px] h-[52px] text-center font-sans text-tiny leading-none text-gray-950 cursor-pointer hover:bg-gray-200";
             if (i === 0) div.classList.add('active');
             div.dataset.variantId = variant.id;
             div.textContent = `UK ${variant.size}`;
@@ -395,7 +445,6 @@
         });
       });
     });
-    console.log({{product | json}});
 </script>
 
 {% schema %}
