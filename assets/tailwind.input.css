@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer components {
+  .product__gallery-item.active {
+    @apply border border-gray-950 hover:shadow-none;
+  }
+
+  .product__options-item.active {
+    @apply border border-gray-950 hover:shadow-none;
+  }
+
+  .product__options-size.active {
+    @apply border border-gray-950 hover:bg-white;
+  }
+}

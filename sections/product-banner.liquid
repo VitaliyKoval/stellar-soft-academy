@@ -2,152 +2,128 @@
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
-<section class="product font-poppins">
-  <div class="wrapper max-w-1440 mx-auto">
+<section class="product">
+  <div class="wrapper max-w-app mx-auto py-20 px-15 flex gap-15">
     {% assign product = all_products[section.settings.product] %}
     {% if product != blank %}
-      <div
-        class="
-          p-80 px-60 flex gap-60
-          md-custom:flex-col md-custom:items-center md-custom:mx-auto  sm-custom:p-60 sm-custom:px-4 sm-custom:gap-6
-        "
-      >
-        <div
-          class="
-            product__gallery flex gap-6
-            lg-custom:flex-col-reverse lg-custom:justify-end
-            md-custom:max-w-536  xs-custom:w-343
-          "
-        >
-          <div
-            class="
-              swiper product__gallery-swiper
-              lg-custom:w-536 lg-custom:h-22
-              xs-custom:w-343
-            "
-          >
-            <div class="swiper-wrapper product__galelly-items">
-              {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
-              {% if variant_gallery != blank %}
-                {% for image in variant_gallery %}
-                  <div class="swiper-slide w-22 h-22">
-                    <img
-                      class="
-                        product__gallery-item w-full h-full object-cover object-center rounded-lg cursor-pointer transition-shadow
-                        hover:shadow-custom-hover
-                        border
-                        {% if forloop.first %}active border-dark{% else %}border-transparent{% endif %}
-                      "
-                      src="{{ image | img_url: '88x88' }}"
-                      alt="{{ product.title | escape }}"
-                      width="88"
-                      height="88"
-                    >
-                  </div>
-                {% endfor %}
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="product__gallery-main relative w-536 h-536 xs-custom:w-343 xs-custom:h-343">
+      <div class="product__gallery flex gap-6 max-lg:flex-col-reverse max-lg:justify-end">
+        <div class="swiper product__gallery-swiper w-thumb h-main max-lg:w-main max-lg:h-thumb">
+          <div class="swiper-wrapper product__galelly-items ">
+            {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
-                {%- if forloop.first -%}
+                <div class="swiper-slide !w-[88px] !h-[88px]">
                   <img
-                    class="product__gallery-img w-full h-full object-cover object-center rounded-lg"
-                    src="{{ image | img_url: '536x536' }}"
-                    alt="{{ product.title | escape }}"
-                    width="536"
-                    height="536"
-                  >
-                {%- endif -%}
-              {% endfor %}
-            {% endif %}
-
-            {% assign badge_text = product.metafields.badge.badge_text %}
-            {% if badge_text != blank %}
-              <div class="product__gallery-badge absolute flex gap-1 top-4 left-4 h-9 p-2 rounded-lg bg-white text-sm text-dark">
-                <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" alt="star"
-                ><span>{{ badge_text }}</span>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="product__options max-w-612 min-h-536 md-custom:max-w-536">
-          <div class="product__options-container xs-custom:w-375 xs-custom:mx-auto xs-custom:pl-4">
-            {% if product.title %}
-              <h3 class="product__options-header text-30 text-dark sm-custom:text-24">{{ product.title }}</h3>
-            {% endif %}
-
-            {% if product.price %}
-              <span class="product__options-price inline-block mt-3 text-base text-gray-custom">
-                {{- product.price | money_without_currency | prepend: '$' -}}
-              </span>
-            {% endif %}
-
-            <div class="product__options-items flex gap-2 h-22 mt-8 sm-custom:mt-6">
-              {% if product.images != blank %}
-                {% for image in product.images %}
-                  <img
+                    class="product__gallery-item h-[86px] w-[86px] {% if forloop.first %}active{% endif %} object-cover object-center rounded-xl cursor-pointer hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
                     src="{{ image | img_url: '88x88' }}"
                     alt="{{ product.title | escape }}"
-                    class="
-                      product__options-item w-22 h-full object-cover object-center rounded-lg cursor-pointer
-                      hover:shadow-custom-hover border
-                      {% if forloop.first %}active border-dark{% else %}border-transparent{% endif %}
-                    "
-                    data-set-item="{{ forloop.index0 }}"
                     width="88"
                     height="88"
                   >
-                {% endfor %}
-              {% endif %}
-            </div>
-
-            <p class="product__options-title text-sm text-dark mt-8 sm-custom:mt-6">Select Size:</p>
-
-            <div class="product__options-sizes mt-3 max-w-612 flex flex-wrap gap-2">
-              {% for variant in product.variants %}
-                {% assign color = variant.option1 | strip | downcase %}
-                {% if color == 'white' and variant.available %}
-                  {% assign size = variant.option2 %}
-                  <div
-                    class="
-                      product__options-size bg-white border rounded-lg p-4 h-13 text-center text-sm text-dark cursor-pointer transition-colors
-                      w-198 xl-custom:w-167-5
-                      hover:bg-stroke
-                      {% if forloop.first %}active border-dark{% else %}border-stroke{% endif %}
-                    "
-                    data-variant-id="{{ variant.id }}"
-                  >
-                    UK {{ size }}
-                  </div>
-                {% endif %}
+                </div>
               {% endfor %}
-            </div>
+            {% endif %}
           </div>
-
-          <form method="post" action="/cart/add">
-            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-            <button
-              type="submit"
+        </div>
+        <div class="product__gallery-main relative w-main h-main">
+          {% if variant_gallery != blank %}
+            {% for image in variant_gallery %}
+              {%- if forloop.first -%}
+                <img
+                  class="product__gallery-img w-main h-main object-cover object-center rounded-xl"
+                  src="{{ image | img_url: '536x536' }}"
+                  alt="{{ product.title | escape }}"
+                  width="536"
+                  height="536"
+                >
+              {%- endif -%}
+            {% endfor %}
+          {% endif %}
+          {% assign badge_text = product.metafields.badge.badge_text %}
+          {% if badge_text != blank %}
+            <div
               class="
-                product__options-add mt-8 rounded-lg py-4 px-8 w-full h-14 bg-dark text-base text-white border-none cursor-pointer transition-colors
-                hover:bg-gray-custom hover:text-stroke hover:shadow-custom-hover
-                sm-custom:mt-6
+                product__gallery-badge absolute flex gap-1 top-4 left-4
+                h-small p-3 rounded-xl
+                bg-white font-sans text-tiny leading-none text-gray-950
               "
             >
-              Add To Bag
-            </button>
-          </form>
-
-          {% if product.description %}
-            <p class="product__options-note text-sm text-gray-custom mt-8 sm-custom:mt-6">
-              {{ product.description | strip_html }}
-            </p>
+              <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" class="h-8 w-8" alt="star"
+              ><span>{{ badge_text }}</span>
+            </div>
           {% endif %}
         </div>
+      </div>
+
+      <div class="product__options max-w-[612px] min-h-[536px]">
+        <div class="product__options-container">
+          {% if product.title %}
+            <h3
+              class="product__options-header font-sans text-h3 leading-none text-gray-950"
+            >
+              {{ product.title }}
+            </h3>
+          {% endif %}
+          {% if product.price %}
+            <span class="product__options-price inline-block mt-3 font-sans text-base leading-none text-gray-600">
+              {{ product.price | money_without_currency | prepend: '$' }}
+            </span>
+          {% endif %}
+          <div class="product__options-items mt-8 flex gap-3 h-[88px]">
+            {% if product.images != blank %}
+              {% for image in product.images %}
+                <img
+                  src="{{ image | img_url: '88x88' }}"
+                  alt="{{ product.title | escape }}"
+                  class="product__options-item  w-thumb h-full object-cover object-center rounded-xl cursor-pointer {% if forloop.first %}active{% endif %} hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]"
+                  data-set-item="{{ forloop.index0 }}"
+                  width="88"
+                  height="88"
+                >
+              {% endfor %}
+            {% endif %}
+          </div>
+          <p class="product__options-title mt-8 font-sans text-tiny leading-none text-gray-950">Select Size:</p>
+          <div class="product__options-sizes mt-3 max-w-[612px] flex flex-wrap gap-2">
+            {% for variant in product.variants %}
+              {% assign color = variant.option1 | strip | downcase %}
+              {% if color == 'white' and variant.available %}
+                {% assign size = variant.option2 %}
+                <div
+                  class="
+                    product__options-size {% if forloop.first %}active{% endif %} bg-white border border-gray-200 rounded-xl p-7
+                    w-[198px] h-[52px] text-center
+                    font-sans text-[14px] leading-none text-gray-950 cursor-pointer hover:bg-gray-200 max-xl:w-[167.5px]
+                  "
+                  data-variant-id="{{ variant.id }}"
+                >
+                  UK {{ size }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <form method="post" action="/cart/add">
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          <button
+            type="submit"
+            class="
+              product__options-add mt-8 w-full h-[56px]
+              flex items-center justify-center
+              bg-gray-950 text-white text-[16px] leading-none font-sans
+              py-4 px-8 rounded-xl border-none cursor-pointer hover:bg-gray-600 hover:text-gray-200 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2)]
+            "
+          >
+            Add To Bag
+          </button>
+        </form>
+
+        {% if product.description %}
+          <p class="product__options-note mt-8 font-sans text-[14px] leading-normal text-gray">
+            {{ product.description | strip_html }}
+          </p>
+        {% endif %}
       </div>
     {% endif %}
   </div>
@@ -276,7 +252,7 @@
         slidesPerView: "auto",
         freeMode: true,
         breakpoints: {
-          1196: {
+          1280: {
             direction: "vertical",
             spaceBetween: 24,
           },
