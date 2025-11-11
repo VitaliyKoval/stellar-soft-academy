@@ -9,11 +9,13 @@
  */
 {
   "sections": {
-    "product_recommendations_xzDeQg": {
+    "product_recommendations_GefdAk": {
       "type": "product-recommendations",
       "name": "Product Recommendations",
       "settings": {
-        "heading": "Recommended products"
+        "heading": "Featured Collection",
+        "collection": "all-sneakers",
+        "products_limit": 8
       }
     },
     "contact_form_gjXPnn": {
@@ -269,7 +271,7 @@
     }
   },
   "order": [
-    "product_recommendations_xzDeQg",
+    "product_recommendations_GefdAk",
     "contact_form_gjXPnn",
     "product_form_xk888V",
     "featured_products_qTQH3m",
