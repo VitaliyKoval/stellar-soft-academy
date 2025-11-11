@@ -9,26 +9,16 @@
  */
 {
   "sections": {
-    "product_recommendations_H97T7E": {
-      "type": "product-recommendations",
-      "name": "Product Recommendations Carousel",
-      "settings": {
-        "heading": "Recommended products"
-      }
-    },
     "contact_form_gjXPnn": {
       "type": "contact-form",
       "name": "Contact form",
-      "settings": {
-        "form_title": "Contact us"
-      }
+      "settings": {}
     },
     "product_form_xk888V": {
       "type": "product-form",
       "name": "Product inquiry form",
       "settings": {
-        "product_handle": "nike-air-max-plus",
-        "form_title": "Product inquiry"
+        "product_handle": "nike-air-max-plus"
       }
     },
     "featured_products_qTQH3m": {
@@ -269,7 +259,6 @@
     }
   },
   "order": [
-    "product_recommendations_H97T7E",
     "contact_form_gjXPnn",
     "product_form_xk888V",
     "featured_products_qTQH3m",
