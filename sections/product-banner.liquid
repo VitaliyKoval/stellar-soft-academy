@@ -1,5 +1,5 @@
+{{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
-{{ 'custom-product-banner.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
 <section class="product">
@@ -9,7 +9,7 @@
       <div class="product__gallery">
         <div class="swiper product__gallery-swiper">
           <div class="swiper-wrapper product__galelly-items">
-            {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
+            {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
                 <div class="swiper-slide">
@@ -102,6 +102,7 @@
     {% endif %}
   </div>
 </section>
+{% endcomment %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -114,25 +115,25 @@
       const colors = ['white', 'black', 'purple'];
       const groupThumbs = [];
 
-      const gallerySwiper = new Swiper('.product__gallery-swiper', {
-        direction: "vertical",
-        slidesPerView: "auto",
-        freeMode: true,
-        breakpoints: {
-          1280: {
-            direction: "vertical",
-            spaceBetween: 24,
-          },
-          680: {
-            direction: "horizontal",
-            spaceBetween: 24,
-          },
-          0: {
-            direction: "horizontal",
-            spaceBetween: 16,
-          },
+    const gallerySwiper = new Swiper('.product__gallery-swiper', {
+      direction: "vertical",
+      slidesPerView: "auto",
+      freeMode: true,
+      breakpoints: {
+        1196: {
+          direction: "vertical",
+          spaceBetween: 24,
         },
-      });
+        680: {
+          direction: "horizontal",
+          spaceBetween: 24,
+        },
+        0: {
+          direction: "horizontal",
+          spaceBetween: 16,
+        },
+      },
+    });
 
       const productData = {
       variants: [
@@ -201,20 +202,20 @@
           groups.querySelector('.product__options-item.active')?.classList.remove('active');
           groupImage.classList.add('active');
 
-          sizesElement.innerHTML = "";
-          const color = colors[groupNumber];
-          const variants = productData.variants.filter(variant => variant.color === color && variant.available);
-          price.textContent = variants[0].price;
-
-          for (let i = 0; i < variants.length; i++) {
-            const variant = variants[i];
-            const div = document.createElement('div');
-            div.className = 'product__options-size';
-            if (i === 0) div.classList.add('active');
-            div.dataset.variantId = variant.id;
-            div.textContent = `UK ${variant.size}`;
-            sizesElement.appendChild(div);
-          }
+        sizesElement.innerHTML = "";
+        const color = colors[groupNumber];
+        const variants = productData.variants.filter(variant => variant.color === color && variant.available);
+        price.textContent = variants[0].price;
+        
+        for (let i = 0; i < variants.length; i++) {
+          const variant = variants[i];
+          const div = document.createElement('div');
+          div.className = 'product__options-size';
+          if (i === 0) div.classList.add('active');
+          div.dataset.variantId = variant.id;
+          div.textContent = `UK ${variant.size}`;
+          sizesElement.appendChild(div);
+        }
 
           const inputId = document.querySelector('form input[name="id"]');
           if (inputId) inputId.value = variants[0].id;
@@ -245,26 +246,26 @@
         }
         const variantId = activeSize.dataset.variantId;
 
-        fetch('/cart/add.js', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            id: variantId,
-            quantity: 1
-          })
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: 1
         })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Added to cart:', data);
-        })
-        .catch(err => {
-          console.error('Error adding to cart:', err);
-        });
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Added to cart:', data);
+      })
+      .catch(err => {
+        console.error('Error adding to cart:', err);
       });
     });
-    console.log({{product | json}});
+  });
+  console.log({{product | json}});
 </script>
 
 {% schema %}
