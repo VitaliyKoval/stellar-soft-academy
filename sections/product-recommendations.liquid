@@ -3,9 +3,23 @@
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 <script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
 
-<section class="collection" data-product-id="{{ product.id }}">
+{% style %}
+  .swiper-button-prev {
+    left: 0px;
+    background-image: url("{{ 'Arrow-left.svg' | asset_url }}");
+  }
+
+  .swiper-button-next {
+    right: 0px;
+    background-image: url("{{ 'Arrow-right.svg' | asset_url }}");
+  }
+{% endstyle %}
+
+<section class="collection" data-section-id="{{ section.id }}">
   <div class="wrapper">
-    <h2 class="collection__header">Featured Collection</h2>
+    {% if section.settings.heading != blank %}
+      <h2 class="collection__header">{{ section.settings.heading }}</h2>
+    {% endif %}
 
     <div class="swiper collection__swiper">
       <div class="swiper-wrapper collection__cards"></div>
@@ -22,8 +36,21 @@
     {
       "type": "text",
       "id": "heading",
-      "label": "Section heading",
-      "default": "Recommended products"
+      "label": "Heading"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Number of Products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
     }
   ],
   "presets": [
