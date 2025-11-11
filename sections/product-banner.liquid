@@ -1,5 +1,5 @@
-{{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
 {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+{{ 'custom-product-banner.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
 <section class="product">
@@ -9,7 +9,7 @@
       <div class="product__gallery">
         <div class="swiper product__gallery-swiper">
           <div class="swiper-wrapper product__galelly-items">
-            {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
+            {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
                 <div class="swiper-slide">
@@ -102,18 +102,17 @@
     {% endif %}
   </div>
 </section>
-{% endcomment %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const price = document.querySelector('.product__options-price');
-      const productGallery = document.querySelector('.product__galelly-items');
-      const mainImage = document.querySelector('.product__gallery-img');
-      const groups = document.querySelector('.product__options-items');
-      const sizesElement  = document.querySelector('.product__options-sizes');
-      const addButton = document.querySelector('.product__options-add');
-      const colors = ['white', 'black', 'purple'];
-      const groupThumbs = [];
+  document.addEventListener('DOMContentLoaded', function () {
+    const price = document.querySelector('.product__options-price');
+    const productGallery = document.querySelector('.product__galelly-items');
+    const mainImage = document.querySelector('.product__gallery-img');
+    const groups = document.querySelector('.product__options-items');
+    const sizesElement  = document.querySelector('.product__options-sizes');
+    const addButton = document.querySelector('.product__options-add');
+    const colors = ['white', 'black', 'purple'];
+    const groupThumbs = [];
 
     const gallerySwiper = new Swiper('.product__gallery-swiper', {
       direction: "vertical",
@@ -135,72 +134,72 @@
       },
     });
 
-      const productData = {
-      variants: [
-        {% for variant in product.variants %}
-          {
-            id: {{ variant.id }},
-            title: "{{ variant.title }}",
-            price: "{{ variant.price | money_without_currency | prepend: '$' }}",
-            color: "{{ variant.option1 | strip | downcase }}",
-            size: "{{ variant.option2 }}",
-            available: {{ variant.available }},
-            gallery: [
-              {% assign variant_gallery = variant.metafields.gallery.variant_gallery.value %}
-              {% if variant_gallery != blank %}
-                {% for image in variant_gallery %}
-                  "{{ image | img_url: '88x88' }}"{% unless forloop.last %},{% endunless %}
-                {% endfor %}
-              {% endif %}
-            ]
-          }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]};
+    const productData = {
+    variants: [
+      {% for variant in product.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title }}",
+          price: "{{ variant.price | money_without_currency | prepend: '$' }}",
+          color: "{{ variant.option1 | strip | downcase }}",
+          size: "{{ variant.option2 }}",
+          available: {{ variant.available }},
+          gallery: [
+            {% assign variant_gallery = variant.metafields.gallery.variant_gallery.value %}
+            {% if variant_gallery != blank %}
+              {% for image in variant_gallery %}
+                "{{ image | img_url: '88x88' }}"{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            {% endif %}
+          ]
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]};
 
-      for (const color of colors) {
-        for (const variant of productData.variants) {
-          if(variant.color === color) {
-            groupThumbs.push([...variant.gallery]);
-            break;
-          }
+    for (const color of colors) {
+      for (const variant of productData.variants) {
+        if(variant.color === color) {
+          groupThumbs.push([...variant.gallery]);
+          break;
         }
       }
+    }
 
-      productGallery.addEventListener('click', (e) => {
-        const thumb = e.target.closest('.product__gallery-item');
-        if (!thumb) return;
+    productGallery.addEventListener('click', (e) => {
+      const thumb = e.target.closest('.product__gallery-item');
+      if (!thumb) return;
 
-        if (!thumb.classList.contains('active')) {
-          const src = thumb.getAttribute('src');
-          const mainSrc = src.replace(/_\d+x\d+/, '_536x536');
-          mainImage.setAttribute('src', mainSrc);
+      if (!thumb.classList.contains('active')) {
+        const src = thumb.getAttribute('src');
+        const mainSrc = src.replace(/_\d+x\d+/, '_536x536');
+        mainImage.setAttribute('src', mainSrc);
 
-          productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
-          thumb.classList.add('active');
-        }
-      });
+        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+        thumb.classList.add('active');
+      }
+    });
 
-      groups.addEventListener('click', (e) => {
-        const groupImage = e.target.closest('.product__options-item');
-        if (!groupImage) return;
+    groups.addEventListener('click', (e) => {
+      const groupImage = e.target.closest('.product__options-item');
+      if (!groupImage) return;
 
-        if (!groupImage.classList.contains('active')) {
-          const groupNumber = parseInt(groupImage.dataset.setItem);
+      if (!groupImage.classList.contains('active')) {
+        const groupNumber = parseInt(groupImage.dataset.setItem);
 
-          productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
 
-          const newThumbs = productGallery.querySelectorAll('.product__gallery-item');
-          const currentThumbs = groupThumbs[groupNumber];
-          newThumbs.forEach((thumb, index) => {
-            thumb.setAttribute('src', currentThumbs[index]);
-          });
-          newThumbs[0].classList.add('active');
+        const newThumbs = productGallery.querySelectorAll('.product__gallery-item');
+        const currentThumbs = groupThumbs[groupNumber];
+        newThumbs.forEach((thumb, index) => {
+          thumb.setAttribute('src', currentThumbs[index]);
+        });
+        newThumbs[0].classList.add('active');
 
-          const mainSrc = currentThumbs[0].replace(/_\d+x\d+/, '_536x536');
-          mainImage.setAttribute('src', mainSrc);
+        const mainSrc = currentThumbs[0].replace(/_\d+x\d+/, '_536x536');
+        mainImage.setAttribute('src', mainSrc);
 
-          groups.querySelector('.product__options-item.active')?.classList.remove('active');
-          groupImage.classList.add('active');
+        groups.querySelector('.product__options-item.active')?.classList.remove('active');
+        groupImage.classList.add('active');
 
         sizesElement.innerHTML = "";
         const color = colors[groupNumber];
@@ -217,34 +216,33 @@
           sizesElement.appendChild(div);
         }
 
-          const inputId = document.querySelector('form input[name="id"]');
-          if (inputId) inputId.value = variants[0].id;
-        }
-      });
-
-      sizesElement.addEventListener('click', (e) => {
-        const sizeElement = e.target.closest('.product__options-size');
-        if (!sizeElement) return;
-
-        if (!sizeElement.classList.contains('active')) {
-          const activeSizeElement = sizesElement.querySelector('.product__options-size.active');
-          activeSizeElement?.classList.remove('active');
-          sizeElement.classList.add('active');
-        }
-
-        const variantId = sizeElement.dataset.variantId;
         const inputId = document.querySelector('form input[name="id"]');
-        if (inputId) inputId.value = variantId;
-      });
+        if (inputId) inputId.value = variants[0].id;
+      }
+    });
 
-      addButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        const activeSize = document.querySelector('.product__options-size.active');
-        if (!activeSize) {
-          return;
-        }
-        const variantId = activeSize.dataset.variantId;
+    sizesElement.addEventListener('click', (e) => {
+      const sizeElement = e.target.closest('.product__options-size');
+      if (!sizeElement) return;
+
+      if (!sizeElement.classList.contains('active')) {
+        const activeSizeElement = sizesElement.querySelector('.product__options-size.active');
+        activeSizeElement?.classList.remove('active');
+        sizeElement.classList.add('active');
+      }
+
+      const variantId = sizeElement.dataset.variantId;
+      const inputId = document.querySelector('form input[name="id"]');
+      if (inputId) inputId.value = variantId;
+    });
+
+    addButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const activeSize = document.querySelector('.product__options-size.active');
+      if (!activeSize) {
+        return;
+      }
+      const variantId = activeSize.dataset.variantId;
 
       fetch('/cart/add.js', {
         method: 'POST',
@@ -265,7 +263,6 @@
       });
     });
   });
-  console.log({{product | json}});
 </script>
 
 {% schema %}
