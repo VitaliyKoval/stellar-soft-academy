@@ -9,7 +9,7 @@
       <div class="product__gallery">
         <div class="swiper product__gallery-swiper">
           <div class="swiper-wrapper product__galelly-items">
-            {% assign variant_gallery = product.variants[0].metafields.gallery.variant_gallery.value %}
+            {% assign variant_gallery = product.first_available_variant.metafields.gallery.variant_gallery.value %}
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
                 <div class="swiper-slide">
@@ -236,7 +236,8 @@
       if (inputId) inputId.value = variantId;
     });
 
-    addButton.addEventListener('click', () => {
+    addButton.addEventListener('click', (e) => {
+      e.preventDefault();
       const activeSize = document.querySelector('.product__options-size.active');
       if (!activeSize) {
         return;
@@ -262,7 +263,6 @@
       });
     });
   });
-  console.log({{product | json}});
 </script>
 
 {% schema %}

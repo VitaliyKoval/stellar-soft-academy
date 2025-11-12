@@ -1,0 +1,117 @@
+:root {
+  --dark: #111;
+  --white: #fff;
+  --gray: #737373;
+  --gray-light: #cacacb;
+  --stroke: #ebebeb;
+}
+
+:root {
+  --font-family: "Poppins", sans-serif;
+  --second-family: "Inter", sans-serif;
+  --third-family: "Lato", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.collection .wrapper {
+  padding: 80px 40px 72px;
+  margin: 0 auto;
+}
+
+.collection__header {
+  font-family: var(--font-family);
+  font-size: 30px !important;
+  font-weight: 700;
+  text-align: center;
+  color: var(--dark);
+}
+
+.swiper-wrapper.collection__cards {
+  margin-top: 48px;
+}
+
+.collection__swiper {
+  position: relative;
+}
+
+.collection__card {
+  height: 384px;
+  width: 312px;
+  max-width: 312px;
+  flex-shrink: 0;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.collection__card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.collection__card-img {
+  width: 100%;
+  height: 312px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.collection__card-info {
+  padding: 0 8px;
+  margin-top: 4px;
+}
+
+.collection__card-name {
+  margin: 0;
+  font-family: var(--font-family);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--dark);
+}
+
+.collection__card-price {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--gray);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  background-size: 16px 16px;
+  z-index: 10;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  content: none;
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+  display: none;
+}
