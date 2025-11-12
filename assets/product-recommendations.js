@@ -1,25 +1,11 @@
-/* document.addEventListener("DOMContentLoaded", () => {
-  const swiperCollection = new Swiper(".collection__swiper", {
-    slidesPerView: "auto",
-    freeMode: true,
-    loop: false,
-    spaceBetween: 24,
-    slidesOffsetBefore: 20,
-    slidesOffsetAfter: 20,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-  });
-}); */
-
 document.addEventListener("DOMContentLoaded", () => {
   const section = document.querySelector(".collection");
   if (!section) return;
 
-  const limit = section.dataset.productsLimit || 8;
   const wrapper = document.querySelector(".collection__cards");
   const productId = wrapper.dataset.productId;
+  const limit = wrapper.dataset.productsLimit || 6;
+
   fetch(`/recommendations/products.json?product_id=${productId}&limit=${limit}`)
     .then((response) => response.json())
     .then((data) => {

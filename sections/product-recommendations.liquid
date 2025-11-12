@@ -22,10 +22,10 @@
     {% endif %}
 
     <div class="swiper collection__swiper">
-      {% assign first_product = collections[section.settings.collection].products.first %}
+      {% assign product = collections[section.settings.collection].products[7] %}
       <div
         class="swiper-wrapper collection__cards"
-        data-product-id="{{ first_product.id }}"
+        data-product-id="{{ product.id }}"
         data-products-limit="{{ section.settings.products_limit }}"
       >
         {% comment %}
