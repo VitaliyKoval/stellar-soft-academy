@@ -22,29 +22,36 @@
     {% endif %}
 
     <div class="swiper collection__swiper">
-      <div class="swiper-wrapper collection__cards">
-        {% assign products_list = collections[section.settings.collection].products %}
-        {% for product in products_list %}
-          {% assign variant = product.first_available_variant %}
-          {% if variant %}
-            <article class="swiper-slide collection__card">
-              <a href="{{ product.url }}">
-                <img
-                  class="collection__card-img"
-                  src="{{ product.featured_image | img_url: '300x300' }}"
-                  alt="{{ product.title | escape }}"
-                  loading="lazy"
-                  width="300"
-                  height="300"
-                >
-                <div class="collection__card-info">
-                  <h3 class="collection__card-name">{{ product.title }}</h3>
-                  <span class="collection__card-price"> ${{ variant.price | divided_by: 100.0 | round: 2 }} </span>
-                </div>
-              </a>
-            </article>
-          {% endif %}
-        {% endfor %}
+      {% assign first_product = collections[section.settings.collection].products.first %}
+      <div
+        class="swiper-wrapper collection__cards"
+        data-product-id="{{ first_product.id }}"
+        data-products-limit="{{ section.settings.products_limit }}"
+      >
+        {% comment %}
+          {% assign products_list = collections[section.settings.collection].products %}
+          {% for product in products_list %}
+            {% assign variant = product.first_available_variant %}
+            {% if variant %}
+              <article class="swiper-slide collection__card">
+                <a href="{{ product.url }}">
+                  <img
+                    class="collection__card-img"
+                    src="{{ product.featured_image | img_url: '300x300' }}"
+                    alt="{{ product.title | escape }}"
+                    loading="lazy"
+                    width="300"
+                    height="300"
+                  >
+                  <div class="collection__card-info">
+                    <h3 class="collection__card-name">{{ product.title }}</h3>
+                    <span class="collection__card-price"> ${{ variant.price | divided_by: 100.0 | round: 2 }} </span>
+                  </div>
+                </a>
+              </article>
+            {% endif %}
+          {% endfor %}
+        {% endcomment %}
       </div>
 
       <div class="swiper-button-prev" aria-label="Previous slide"></div>
