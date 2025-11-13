@@ -38,10 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .join("");
 
-      new Swiper(".collection__swiper", {
+      const swiperCollection = new Swiper(".collection__swiper", {
         slidesPerView: "auto",
-        spaceBetween: 24,
         freeMode: true,
+        loop: false,
+        spaceBetween: 24,
+        slidesOffsetBefore: 20,
+        slidesOffsetAfter: 20,
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev",
