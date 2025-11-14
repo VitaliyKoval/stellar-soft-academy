@@ -1,0 +1,17 @@
+{%- assign social_platforms = 'facebook,instagram,youtube,tiktok,twitter,pinterest,snapchat,tumblr,vimeo'
+  | split: ','
+-%}
+<ul class="list-social {{ class }}">
+  {%- for platform in social_platforms -%}
+    {%- assign link = settings['social_' | append: platform | append: '_link'] -%}
+    {%- if link != blank -%}
+      <li class="list-social__item">
+        <a href="{{ link }}" class="list-social__link" aria-label="{{ platform | capitalize }}">
+          <span class="svg-wrapper">
+            {{- 'icon-' | append: platform | append: '.svg' | inline_asset_content -}}
+          </span>
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

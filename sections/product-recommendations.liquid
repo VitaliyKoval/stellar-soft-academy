@@ -3,18 +3,6 @@
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 <script src="{{ 'product-recommendations.js' | asset_url }}" defer></script>
 
-{% style %}
-  .swiper-button-prev {
-    left: 0;
-    background-image: url("{{ 'Arrow-left.svg' | asset_url }}");
-  }
-
-  .swiper-button-next {
-    right: 0;
-    background-image: url("{{ 'Arrow-right.svg' | asset_url }}");
-  }
-{% endstyle %}
-
 <section class="collection" data-section-id="{{ section.id }}">
   <div class="wrapper">
     {% if section.settings.heading != blank %}
@@ -54,8 +42,8 @@
         {% endcomment %}
       </div>
 
-      <div class="swiper-button-prev" aria-label="Previous slide"></div>
-      <div class="swiper-button-next" aria-label="Next slide"></div>
+      <div class="swiper-button-prev" aria-label="Previous slide">{{- 'Arrow-left.svg' | inline_asset_content -}}</div>
+      <div class="swiper-button-next" aria-label="Next slide">{{- 'Arrow-right.svg' | inline_asset_content -}}</div>
     </div>
   </div>
 </section>

@@ -4,9 +4,6 @@
   --gray: #737373;
   --gray-light: #cacacb;
   --stroke: #ebebeb;
-}
-
-:root {
   --font-family: "Poppins", sans-serif;
   --second-family: "Inter", sans-serif;
   --third-family: "Lato", sans-serif;
@@ -34,7 +31,7 @@ html {
 
 .collection__header {
   font-family: var(--font-family);
-  font-size: 30px !important;
+  font-size: 30px;
   font-weight: 700;
   text-align: center;
   color: var(--dark);
@@ -49,7 +46,6 @@ html {
 }
 
 .collection__card {
-  height: 384px;
   width: 312px;
   max-width: 312px;
   flex-shrink: 0;
@@ -94,24 +90,26 @@ html {
 
 .swiper-button-next,
 .swiper-button-prev {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   top: 50%;
   transform: translateY(-50%);
-  background-repeat: no-repeat;
-  background-position: center;
   position: absolute;
-  background-size: 16px 16px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-  content: none;
+  content: none !important;
+  display: none !important;
 }
 
 .swiper-button-prev.swiper-button-disabled,
 .swiper-button-next.swiper-button-disabled {
-  display: none;
+  display: none !important;
 }
