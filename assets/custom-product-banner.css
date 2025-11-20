@@ -261,21 +261,25 @@ html {
 
 @media (max-width: 568px) {
   .product__gallery {
-    width: 343px;
+    width: 320px;
   }
 
   .product__gallery-main {
-    width: 343px;
-    height: 343px;
+    max-width: 320px;
+    height: 320px;
   }
 
   .product__gallery-swiper {
-    width: 343px;
+    width: 320px;
   }
 
   .product__options-container {
-    width: 375px;
+    width: 320px;
     margin: 0 auto;
     padding-left: 16px;
+  }
+
+  .product__options-size {
+    width: 135px;
   }
 }

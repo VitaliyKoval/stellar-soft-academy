@@ -1,71 +1,73 @@
 {% assign selected_product = all_products[section.settings.product_handle] %}
 
 {% if selected_product %}
-  {% if section.settings.form_title != blank %}
-    <h2 class="product-form__title">{{ section.settings.form_title }}</h2>
-  {% endif %}
+  <div class="product-inquiry-section">
+    {% if section.settings.form_title != blank %}
+      <h2 class="product-form__title">{{ section.settings.form_title }}</h2>
+    {% endif %}
 
-  {% form 'product', selected_product, class: 'product-form', id: 'ProductForm', aria-busy: 'false' %}
-    {% if form.errors %}
-      <div class="form-errors" role="alert" aria-live="assertive">
-        {{ form.errors | default_errors }}
+    {% form 'product', selected_product, class: 'product-form', id: 'ProductForm', aria-busy: 'false' %}
+      {% if form.errors %}
+        <div class="form-errors" role="alert" aria-live="assertive">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      {% if form.posted_successfully? %}
+        <p class="form-success" role="status" aria-live="polite">
+          {{ 'product.form.success' | t }}
+        </p>
+      {% endif %}
+
+      <input type="hidden" name="id" value="{{ selected_product.selected_or_first_available_variant.id }}">
+
+      <div class="form-group">
+        <label for="Quantity">{{ 'product.form.quantity' | t }}</label>
+        <input
+          id="Quantity"
+          name="quantity"
+          type="number"
+          value="1"
+          min="1"
+          {% unless selected_product.selected_or_first_available_variant.available %}
+            disabled
+          {% endunless %}
+        >
       </div>
-    {% endif %}
 
-    {% if form.posted_successfully? %}
-      <p class="form-success" role="status" aria-live="polite">
-        {{ 'product.form.success' | t }}
-      </p>
-    {% endif %}
+      <div class="form-group">
+        <label for="Reason">{{ 'product.form.reason' | t }}</label>
+        <input
+          id="Reason"
+          name="properties[Reason]"
+          type="text"
+          placeholder="{{ 'product.form.reason_placeholder' | t }}"
+        >
+      </div>
 
-    <input type="hidden" name="id" value="{{ selected_product.selected_or_first_available_variant.id }}">
+      <div class="form-group">
+        <label for="PreferredContact">{{ 'product.form.contact' | t }}</label>
+        <select id="PreferredContact" name="properties[Preferred contact]">
+          <option value="Email">{{ 'product.form.contact_email' | t }}</option>
+          <option value="Phone">{{ 'product.form.contact_phone' | t }}</option>
+        </select>
+      </div>
 
-    <div class="form-group">
-      <label for="Quantity">{{ 'product.form.quantity' | t }}</label>
-      <input
-        id="Quantity"
-        name="quantity"
-        type="number"
-        value="1"
-        min="1"
+      <button
+        type="submit"
+        class="btn"
         {% unless selected_product.selected_or_first_available_variant.available %}
           disabled
         {% endunless %}
       >
-    </div>
-
-    <div class="form-group">
-      <label for="Reason">{{ 'product.form.reason' | t }}</label>
-      <input
-        id="Reason"
-        name="properties[Reason]"
-        type="text"
-        placeholder="{{ 'product.form.reason_placeholder' | t }}"
-      >
-    </div>
-
-    <div class="form-group">
-      <label for="PreferredContact">{{ 'product.form.contact' | t }}</label>
-      <select id="PreferredContact" name="properties[Preferred contact]">
-        <option value="Email">{{ 'product.form.contact_email' | t }}</option>
-        <option value="Phone">{{ 'product.form.contact_phone' | t }}</option>
-      </select>
-    </div>
-
-    <button
-      type="submit"
-      class="btn"
-      {% unless selected_product.selected_or_first_available_variant.available %}
-        disabled
-      {% endunless %}
-    >
-      {% if selected_product.selected_or_first_available_variant.available %}
-        {{ 'product.form.add_to_cart' | t }}
-      {% else %}
-        {{ 'product.form.unavailable' | t }}
-      {% endif %}
-    </button>
-  {% endform %}
+        {% if selected_product.selected_or_first_available_variant.available %}
+          {{ 'product.form.add_to_cart' | t }}
+        {% else %}
+          {{ 'product.form.unavailable' | t }}
+        {% endif %}
+      </button>
+    {% endform %}
+  </div>
 {% else %}
   <p>Please select a product in the section settings.</p>
 {% endif %}
@@ -149,6 +151,13 @@
 </script>
 
 {% style %}
+  .product-inquiry-section {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
   .product-form__title {
     text-align: center;
     font-size: 1.75rem;
@@ -157,7 +166,7 @@
   }
 
   .product-form {
-    max-width: 400px;
+    width: 100%;
     margin: 0 auto 40px;
     display: flex;
     flex-direction: column;
