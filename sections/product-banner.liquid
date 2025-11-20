@@ -13,14 +13,17 @@
             {% if variant_gallery != blank %}
               {% for image in variant_gallery %}
                 <div class="swiper-slide">
-                  <img
-                    class="product__gallery-item {% if forloop.first %}active{% endif %}"
-                    src="{{ image | img_url: '88x88' }}"
-                    alt="{{ product.title | escape }}"
-                    width="88"
-                    height="88"
-                    loading="lazy"
-                  >
+                  {%- capture image_alt -%}{{ product.title | escape }}{%- endcapture -%}
+                  {{
+                    image
+                    | image_url: width: 88
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'product__gallery-item {% if forloop.first %}active{% endif %}',
+                      alt: image_alt,
+                      width: 88,
+                      height: 88
+                  }}
                 </div>
               {% endfor %}
             {% endif %}
@@ -30,14 +33,12 @@
           {% if variant_gallery != blank %}
             {% for image in variant_gallery %}
               {%- if forloop.first -%}
-                <img
-                  class="product__gallery-img"
-                  src="{{ image | img_url: '536x536' }}"
-                  alt="{{ product.title | escape }}"
-                  width="536"
-                  height="536"
-                  loading="lazy"
-                >
+                {%- capture image_alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {{
+                  image
+                  | image_url: width: 536
+                  | image_tag: loading: 'lazy', class: 'product__gallery-img', alt: image_alt, width: 536, height: 536
+                }}
               {%- endif -%}
             {% endfor %}
           {% endif %}
@@ -62,15 +63,18 @@
           <div class="product__options-items">
             {% if product.images != blank %}
               {% for image in product.images %}
-                <img
-                  src="{{ image | img_url: '88x88' }}"
-                  alt="{{ product.title | escape }}"
-                  class="product__options-item {% if forloop.first %}active{% endif %}"
-                  data-set-item="{{ forloop.index0 }}"
-                  width="88"
-                  height="88"
-                  loading="lazy"
-                >
+                {%- capture image_alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {{
+                  image
+                  | image_url: width: 88
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'product__options-item {% if forloop.first %}active{% endif %}',
+                    alt: image_alt,
+                    width: 88,
+                    height: 88,
+                    data_set_item: forloop.index0
+                }}
               {% endfor %}
             {% endif %}
           </div>
