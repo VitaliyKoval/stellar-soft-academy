@@ -12,17 +12,9 @@
     "main": {
       "type": "main-404",
       "settings": {}
-    },
-    "product_banner_f6GzHN": {
-      "type": "product-banner",
-      "name": "Product Banner",
-      "settings": {
-        "product": "nike-air-max-plus"
-      }
     }
   },
   "order": [
-    "main",
-    "product_banner_f6GzHN"
+    "main"
   ]
 }
