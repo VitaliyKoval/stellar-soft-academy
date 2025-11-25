@@ -13,7 +13,7 @@
       "type": "main-404",
       "settings": {}
     },
-    "product_banner_f6GzHN": {
+    "product_banner_U6HRrJ": {
       "type": "product-banner",
       "name": "Product Banner",
       "settings": {
@@ -23,6 +23,6 @@
   },
   "order": [
     "main",
-    "product_banner_f6GzHN"
+    "product_banner_U6HRrJ"
   ]
 }
