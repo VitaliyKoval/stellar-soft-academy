@@ -107,7 +107,7 @@
               <p class="product-price">$${product.price.toFixed(2)}</p>
             {% endif %}
             {% if section.settings.show_rating %}
-              <div class="product-rating" data-rating="${product.rating}"></div>
+              <div class="product-rating" role="img" aria-label="Rating: ${product.rating} out of 5" data-rating="${product.rating}"></div>
             {% endif %}
             {% if section.settings.show_add_to_cart %}
               <button class="add-to-cart-btn" data-variant-id="${product.id}">Add to Cart</button>
