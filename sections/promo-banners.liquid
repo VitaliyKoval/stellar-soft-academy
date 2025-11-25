@@ -190,7 +190,7 @@
     {% endif %}
   </div>
 
-  <div class="promo-banners__grid">
+  <div class="promo-banners__grid" role="group" aria-label="Promotional Banners">
     {% for block in section.blocks %}
       {% if block.type == 'banner' %}
         <div
@@ -198,6 +198,8 @@
           class="promo-banners__item promo-banners__item--{{ block.settings.aspect_ratio }}"
           data-block-id="{{ block.id }}"
           data-block-type="banner"
+          role="group"
+          aria-label="{{ block.settings.title | escape }}"
         >
           {% if block.settings.image %}
             <img
@@ -211,10 +213,10 @@
 
           <div class="promo-banners__overlay">
             {% if block.settings.title %}
-              <h3>{{ block.settings.title }}</h3>
+              <h3 id="promo-title-{{ block.id }}">{{ block.settings.title }}</h3>
             {% endif %}
             {% if block.settings.button_text and block.settings.button_link %}
-              <a href="{{ block.settings.button_link }}" class="promo-banners__button">
+              <a href="{{ block.settings.button_link }}" class="promo-banners__button" aria-labelledby="promo-title-{{ block.id }}">
                 {{ block.settings.button_text }}
               </a>
             {% endif %}

@@ -2,7 +2,7 @@
 {{ 'custom-product-banner.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
 
-<section class="product">
+<section class="product" role="region" aria-labelledby="product-title">
   <div class="wrapper">
     {% assign product = all_products[section.settings.product] %}
     {% if product != blank %}
@@ -22,7 +22,8 @@
                       class: 'product__gallery-item {% if forloop.first %}active{% endif %}',
                       alt: image_alt,
                       width: 88,
-                      height: 88
+                      height: 88,
+                      aria-current: '{% if forloop.first %}true{% else %}false{% endif %}'
                   }}
                 </div>
               {% endfor %}
@@ -45,7 +46,14 @@
           {% assign badge_text = product.metafields.badge.badge_text %}
           {% if badge_text != blank %}
             <div class="product__gallery-badge">
-              <img src="{{ 'star-small.svg' | asset_url }}" width="20" height="20" alt="star" loading="lazy"
+              <img
+                src="{{ 'star-small.svg' | asset_url }}"
+                width="20"
+                height="20"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+
               ><span>{{ badge_text }}</span>
             </div>
           {% endif %}
@@ -55,15 +63,17 @@
       <div class="product__options">
         <div class="product__options-container">
           {% if product.title %}
-            <h3 class="product__options-header">{{ product.title }}</h3>
+            <h3 class="product__options-header" id="product-title">{{ product.title }}</h3>
           {% endif %}
           {% if product.price %}
-            <span class="product__options-price">{{ product.price | money_without_currency | prepend: '$' }}</span>
+            <span class="product__options-price" aria-live="polite">
+              {{- product.price | money_without_currency | prepend: '$' -}}
+            </span>
           {% endif %}
           <div class="product__options-items">
             {% if product.images != blank %}
               {% for image in product.images %}
-                {%- capture image_alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {%- capture image_alt -%}{{ product.title | escape }} - {{ forloop.index }}{%- endcapture -%}
                 {{
                   image
                   | image_url: width: 88
@@ -73,23 +83,29 @@
                     alt: image_alt,
                     width: 88,
                     height: 88,
-                    data_set_item: forloop.index0
+                    data_set_item: forloop.index0,
+                    role: 'button',
+                    aria-label: 'Select color '
+                  | append: forloop.index
                 }}
               {% endfor %}
             {% endif %}
           </div>
-          <p class="product__options-title">Select Size:</p>
-          <div class="product__options-sizes">
+          <p class="product__options-title" id="size-options-label">Select Size:</p>
+          <div class="product__options-sizes" role="radiogroup" aria-labelledby="size-options-label">
             {% for variant in product.variants %}
               {% assign color = variant.option1 | strip | downcase %}
               {% if color == 'white' and variant.available %}
                 {% assign size = variant.option2 %}
-                <div
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
                   class="product__options-size {% if forloop.first %}active{% endif %}"
                   data-variant-id="{{ variant.id }}"
                 >
                   UK {{ size }}
-                </div>
+                </button>
               {% endif %}
             {% endfor %}
           </div>
@@ -181,8 +197,13 @@
         const mainSrc = src.replace(/_\d+x\d+/, '_536x536');
         mainImage.setAttribute('src', mainSrc);
 
-        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+        const currentActive = productGallery.querySelector('.product__gallery-item.active');
+        if (currentActive) {
+          currentActive.classList.remove('active');
+          currentActive.setAttribute('aria-current', 'false');
+        }
         thumb.classList.add('active');
+        thumb.setAttribute('aria-current', 'true');
       }
     });
 
@@ -193,7 +214,11 @@
       if (!groupImage.classList.contains('active')) {
         const groupNumber = parseInt(groupImage.dataset.setItem);
 
-        productGallery.querySelector('.product__gallery-item.active')?.classList.remove('active');
+        const currentActive = productGallery.querySelector('.product__gallery-item.active');
+        if (currentActive) {
+          currentActive.classList.remove('active');
+          currentActive.setAttribute('aria-current', 'false');
+        }
 
         const newThumbs = productGallery.querySelectorAll('.product__gallery-item');
         const currentThumbs = groupThumbs[groupNumber];
@@ -201,6 +226,7 @@
           thumb.setAttribute('src', currentThumbs[index]);
         });
         newThumbs[0].classList.add('active');
+        newThumbs[0].setAttribute('aria-current', 'true');
 
         const mainSrc = currentThumbs[0].replace(/_\d+x\d+/, '_536x536');
         mainImage.setAttribute('src', mainSrc);
@@ -215,12 +241,19 @@
         
         for (let i = 0; i < variants.length; i++) {
           const variant = variants[i];
-          const div = document.createElement('div');
-          div.className = 'product__options-size';
-          if (i === 0) div.classList.add('active');
-          div.dataset.variantId = variant.id;
-          div.textContent = `UK ${variant.size}`;
-          sizesElement.appendChild(div);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.role = 'radio';
+          button.className = 'product__options-size';
+          if (i === 0) {
+            button.classList.add('active');
+            button.setAttribute('aria-checked', 'true');
+          } else {
+            button.setAttribute('aria-checked', 'false');
+          }
+          button.dataset.variantId = variant.id;
+          button.textContent = `UK ${variant.size}`;
+          sizesElement.appendChild(button);
         }
 
         const inputId = document.querySelector('form input[name="id"]');
@@ -235,7 +268,9 @@
       if (!sizeElement.classList.contains('active')) {
         const activeSizeElement = sizesElement.querySelector('.product__options-size.active');
         activeSizeElement?.classList.remove('active');
+        activeSizeElement?.setAttribute('aria-checked', 'false');
         sizeElement.classList.add('active');
+        sizeElement.setAttribute('aria-checked', 'true');
       }
 
       const variantId = sizeElement.dataset.variantId;

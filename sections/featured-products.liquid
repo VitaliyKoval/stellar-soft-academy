@@ -51,7 +51,7 @@
 
 <div class="featured-products-section" data-section-id="{{ section.id }}">
   {% if section.settings.heading != blank %}
-    <h2>{{ section.settings.heading }}</h2>
+    <h2 id="featured-products-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
   {% endif %}
 
   <select class="featured-products-sort" aria-label="Sort products">
@@ -62,7 +62,13 @@
     <option value="title-descending">Title: Z–A</option>
   </select>
 
-  <div class="featured-products-list"></div>
+  <div
+    class="featured-products-list"
+    aria-live="polite"
+    aria-atomic="true"
+    role="region"
+    aria-labelledby="featured-products-heading-{{ section.id }}"
+  ></div>
 </div>
 
 <script>
@@ -122,8 +128,10 @@
     function renderStars(container, rating) {
       const maxStars = 5;
       container.innerHTML = '';
+      container.setAttribute('aria-label', `Rating: ${rating} out of ${maxStars}`);
       for (let i = 1; i <= maxStars; i++) {
         const star = document.createElement('span');
+        star.setAttribute('aria-hidden', 'true');
         if (rating >= i) star.className = 'star full';
         else if (rating >= i - 0.5) star.className = 'star half';
         else star.className = 'star empty';
