@@ -1,0 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "product_banner_VGaMeD": {
+      "type": "product-banner",
+      "name": "Product Banner",
+      "settings": {
+        "product": "nike-air-max-plus"
+      }
+    }
+  },
+  "order": [
+    "product_banner_VGaMeD"
+  ]
+}

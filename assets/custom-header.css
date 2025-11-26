@@ -1,10 +1,11 @@
-/* Header Start*/
-
 .header {
   min-height: 84px;
 }
 
-.header .wrapper {
+.header {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
   padding: 20px 60px;
   align-items: center;
@@ -69,19 +70,22 @@
 }
 
 @media (max-width: 656px) {
-  .header .wrapper {
+  .header {
     padding: 20px 20px;
   }
 
   .header__menu {
     display: none;
   }
+  .header__menu {
+    flex-grow: 1;
+  }
 
   .header__burger-menu {
     display: block;
   }
 
-  .header .wrapper {
+  .header {
     flex-wrap: wrap;
   }
 
@@ -103,9 +107,5 @@
     height: 222px;
     margin-top: 30px;
     overflow: visible;
-  }
-
-  .header__burger-menu.open {
-    background-image: url(../images/small-x.svg);
   }
 }
