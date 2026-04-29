@@ -30,6 +30,11 @@
           "settings": {
           }
         },
+        "phone_input": {
+          "type": "phone_input",
+          "settings": {
+          }
+        },
         "buttons": {
           "type": "buttons",
           "settings": {
@@ -38,6 +43,7 @@
       },
       "block_order": [
         "subtotal",
+        "phone_input",
         "buttons"
       ]
     }

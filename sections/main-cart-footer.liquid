@@ -1,4 +1,5 @@
 {{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
 {{ 'component-totals.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
@@ -103,7 +104,31 @@
                   {%- endif -%}
                 </small>
               </div>
-            {%- else -%}
+            {%- when 'phone_input' -%}
+              <cart-phone-input 
+                class="cart__phone-input" 
+                data-cart-empty="{% if cart == empty %}true{% else %}false{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                <div class="field">
+                  <input
+                    type="tel"
+                    id="Cart-phone"
+                    class="field__input"
+                    name="attributes[phone]"
+                    form="cart"
+                    placeholder=" "
+                    value="{{ cart.attributes.phone }}"
+                  >
+                  <label class="field__label" for="Cart-phone">{{ block.settings.label | escape }}</label>
+                </div>
+                <div class="cart-item__error" id="Phone-error" role="alert" style="display: none; margin-top: 0.5rem;">
+                  <small class="cart-item__error-text" style="color: #d03c31;">
+                    {{ block.settings.error_message | escape }}
+                  </small>
+                </div>
+              </cart-phone-input>
+            {%- when 'buttons' -%}
               <div class="cart__ctas" {{ block.shopify_attributes }}>
                 <button
                   type="submit"
@@ -174,6 +199,31 @@
       "type": "subtotal",
       "name": "t:sections.main-cart-footer.blocks.subtotal.name",
       "limit": 1
+    },
+    {
+      "type": "phone_input",
+      "name": "Phone input",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Phone number required*"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "default": "Required"
+        },
+        {
+          "type": "text",
+          "id": "error_message",
+          "label": "Error message",
+          "default": "Please enter a valid phone number."
+        }
+      ]
     },
     {
       "type": "buttons",

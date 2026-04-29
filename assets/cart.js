@@ -292,3 +292,41 @@ if (!customElements.get('cart-note')) {
     }
   );
 }
+
+if (!customElements.get('cart-phone-input')) {
+  customElements.define('cart-phone-input', class extends HTMLElement {
+    constructor() {
+      super();
+      this.input = this.querySelector('input');
+      this.errorContainer = this.querySelector('.cart-item__error');
+      this.checkoutButton = document.getElementById('checkout');
+      
+      if (this.input) {
+        this.input.addEventListener('input', () => this.validate(false));
+        this.input.addEventListener('blur', () => this.validate(true));
+      }
+    }
+
+    validate(showError = false) {
+      if (!this.checkoutButton || !this.input) return;
+      
+      const rawValue = this.input.value.trim();
+      const cleanValue = rawValue.replace(/[^\d+]/g, '');
+      const isValid = /^(\+?38)?0\d{9}$/.test(cleanValue);
+      const isCartEmpty = this.dataset.cartEmpty === 'true';
+      const shouldDisable = !isValid || isCartEmpty;
+      
+      this.checkoutButton.disabled = shouldDisable;
+      Object.assign(this.checkoutButton.style, {
+        opacity: shouldDisable ? '0.5' : '1',
+        pointerEvents: shouldDisable ? 'none' : 'auto'
+      });
+      
+      if (this.errorContainer) {
+        this.errorContainer.style.display = (showError && !isValid && rawValue !== '') ? 'block' : 'none';
+      }
+    }
+  });
+
+  document.querySelectorAll('cart-phone-input').forEach(el => el.validate());
+}
