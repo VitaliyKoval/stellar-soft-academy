@@ -1,0 +1,306 @@
+{%- comment -%}
+  Sticky Add to Cart — Ecom Swift LLC
+  https://github.com/Ecom-Swift-LLC/shopify-sticky-add-to-cart
+
+  Renders a sticky add-to-cart bar on product pages. It mirrors the variant that is
+  selected in the theme's own product form, so there is nothing to configure per theme.
+  MIT licensed.
+{%- endcomment -%}
+
+{{ 'sticky-add-to-cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'sticky-add-to-cart.js' | asset_url }}" defer="defer"></script>
+
+{%- if product == blank -%}
+  {%- if request.design_mode -%}
+    <p class="sticky-atc-note">
+      The sticky add-to-cart bar only renders on product pages. Add this section to your
+      product template.
+    </p>
+  {%- endif -%}
+{%- else -%}
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  {%- assign variant_image = current_variant.featured_image | default: product.featured_image -%}
+
+  <sticky-add-to-cart
+    class="sticky-atc sticky-atc--{{ section.settings.position }}{% if section.settings.mobile_only %} sticky-atc--mobile-only{% endif %}"
+    role="region"
+    aria-label="{{ section.settings.button_label | escape }}"
+    aria-hidden="true"
+    data-after-add="{{ section.settings.after_add }}"
+    data-scroll-offset="{{ section.settings.scroll_offset }}"
+    data-body-padding="{{ section.settings.reserve_space }}"
+    data-button-label="{{ section.settings.button_label | escape }}"
+    data-added-label="{{ section.settings.added_label | escape }}"
+    data-sold-out-label="{{ section.settings.sold_out_label | escape }}"
+    data-unavailable-label="{{ section.settings.unavailable_label | escape }}"
+    data-error-label="{{ section.settings.error_label | escape }}"
+    style="
+      --sticky-atc-bg: {{ section.settings.background }};
+      --sticky-atc-text: {{ section.settings.text_color }};
+      --sticky-atc-button-bg: {{ section.settings.button_background }};
+      --sticky-atc-button-text: {{ section.settings.button_text_color }};
+      --sticky-atc-radius: {{ section.settings.button_radius }}px;
+    "
+  >
+    <div class="sticky-atc__inner">
+      {%- if section.settings.show_image and variant_image -%}
+        <img
+          class="sticky-atc__image"
+          src="{{ variant_image | image_url: width: 160 }}"
+          alt="{{ variant_image.alt | default: product.title | escape }}"
+          width="80"
+          height="80"
+          loading="lazy"
+          data-sticky-atc-image
+        >
+      {%- endif -%}
+
+      {%- if section.settings.show_title or section.settings.show_price -%}
+        <div class="sticky-atc__info">
+          {%- if section.settings.show_title -%}
+            <span class="sticky-atc__title">{{ product.title }}</span>
+          {%- endif -%}
+          {%- if section.settings.show_price -%}
+            <span class="sticky-atc__prices">
+              <span class="sticky-atc__price" data-sticky-atc-price>
+                {{- current_variant.price | money -}}
+              </span>
+              <s
+                class="sticky-atc__compare"
+                data-sticky-atc-compare
+                {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}
+              >
+                {{- current_variant.compare_at_price | money -}}
+              </s>
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <form
+        class="sticky-atc__form"
+        method="post"
+        action="{{ routes.cart_add_url }}"
+        data-sticky-atc-form
+      >
+        <input type="hidden" name="form_type" value="product">
+        <input type="hidden" name="utf8" value="✓">
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-sticky-atc-id>
+
+        {%- if section.settings.show_quantity -%}
+          <label class="sticky-atc__quantity-label" for="StickyAtcQuantity-{{ section.id }}">
+            {{ section.settings.quantity_label }}
+          </label>
+          <input
+            class="sticky-atc__quantity"
+            id="StickyAtcQuantity-{{ section.id }}"
+            type="number"
+            name="quantity"
+            value="1"
+            min="1"
+            step="1"
+            inputmode="numeric"
+          >
+        {%- else -%}
+          <input type="hidden" name="quantity" value="1">
+        {%- endif -%}
+
+        <button
+          class="sticky-atc__button"
+          type="submit"
+          data-sticky-atc-submit
+          {% unless current_variant.available %}disabled{% endunless %}
+        >
+          <span data-sticky-atc-button-text>
+            {%- if current_variant.available -%}
+              {{ section.settings.button_label }}
+            {%- else -%}
+              {{ section.settings.sold_out_label }}
+            {%- endif -%}
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <p class="sticky-atc__error" data-sticky-atc-error role="status" hidden></p>
+
+    <script type="application/json" data-sticky-atc-variants>
+      [
+        {%- for variant in product.variants -%}
+          {
+            "id": {{ variant.id }},
+            "available": {{ variant.available }},
+            "price": {{ variant.price | money | strip_html | json }},
+            "compare_at_price": {% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money | strip_html | json }}{% else %}null{% endif %},
+            "image": {% if variant.featured_image %}{{ variant.featured_image | image_url: width: 160 | json }}{% else %}null{% endif %}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    </script>
+  </sticky-add-to-cart>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sticky add to cart",
+  "tag": "aside",
+  "class": "sticky-atc-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "default": "bottom",
+      "options": [
+        { "value": "bottom", "label": "Bottom of screen" },
+        { "value": "top", "label": "Top of screen" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_only",
+      "label": "Show on mobile only",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "scroll_offset",
+      "label": "Fallback scroll distance",
+      "info": "Only used when the theme's own add-to-cart button can't be found. The bar appears after this many pixels of scrolling.",
+      "min": 200,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "checkbox",
+      "id": "reserve_space",
+      "label": "Reserve space at the end of the page",
+      "info": "Adds bottom padding while the bar is visible so it never covers the footer.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show product image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show product title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show quantity field",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "after_add",
+      "label": "After adding to cart",
+      "default": "ajax",
+      "options": [
+        { "value": "ajax", "label": "Stay on the page" },
+        { "value": "cart", "label": "Go to the cart page" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "Added confirmation",
+      "default": "Added"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "unavailable_label",
+      "label": "Unavailable label",
+      "default": "Unavailable"
+    },
+    {
+      "type": "text",
+      "id": "error_label",
+      "label": "Generic error message",
+      "default": "Sorry, that couldn't be added to your cart."
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Quantity label",
+      "default": "Quantity"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Bar background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Bar text",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky add to cart"
+    }
+  ]
+}
+{% endschema %}
